@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Tareas } from '../../core/services/tareas';
 import { TarjetaTarea } from '../io/tarjeta-tarea/tarjeta-tarea';
 
@@ -8,7 +9,7 @@ import { TarjetaTarea } from '../io/tarjeta-tarea/tarjeta-tarea';
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-servicios',
-  imports: [TarjetaTarea],
+  imports: [TarjetaTarea, RouterLink],
   templateUrl: './servicios.html',
   styleUrl: './servicios.css',
 })

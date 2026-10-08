@@ -1,0 +1,4 @@
+<h1>Zona Admin 🔒</h1>
+<p>Solo visible si estás logueado. El <code>authGuard</code> bloquea el resto.</p>
+<p>Usuario actual: <strong>{{ auth.usuario() }}</strong></p>
+<button (click)="auth.logOut()">Cerrar sesión</button>

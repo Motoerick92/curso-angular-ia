@@ -1,0 +1,13 @@
+<!-- Detalle de UNA tarea: id viene de la URL -->
+@if (tarea(); as t) {
+  <h1>Tarea #{{ t.id }}</h1>
+  <p><strong>{{ t.titulo }}</strong></p>
+  <p>Prioridad: {{ t.prioridad }}</p>
+  <p>Estado: {{ t.hecha ? '✅ Completada' : '⏳ Pendiente' }}</p>
+} @else {
+  <!-- Id inválido o tarea eliminada -->
+  <h1>Tarea no encontrada</h1>
+  <p>El id <strong>{{ id() }}</strong> no existe en la lista.</p>
+}
+
+<a routerLink="/servicios">← Volver a la lista</a>

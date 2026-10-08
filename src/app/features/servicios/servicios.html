@@ -35,6 +35,8 @@
       (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
       (eliminar)="alEliminar($event)"
     />
+    <!-- Link al detalle con parámetro de ruta -->
+    <a [routerLink]="['/tarea', tarea.id]" class="ver-detalle">Ver detalle →</a>
   }
 }
 
