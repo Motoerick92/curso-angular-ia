@@ -1,0 +1,35 @@
+/* Estilos del demo de control flow */
+.caja {
+  border: 1px solid #89b4fa;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.caja.apagado {
+  border-color: #6c7086;
+  opacity: 0.6;
+}
+
+/* Tarea completada: activada con [class.hecha] en el template */
+.hecha {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.badge {
+  background: #89b4fa;
+  color: #1e1e2e;
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 0.75rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 0.5rem 0;
+}

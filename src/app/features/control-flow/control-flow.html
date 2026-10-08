@@ -1,0 +1,91 @@
+<h1>Módulo 4 — Control Flow moderno</h1>
+<p>Angular 17+ reemplazó *ngIf / *ngFor / *ngSwitch por bloques nativos: &#64;if, &#64;for, &#64;switch.
+   Más rápidos, mejor tipados y sin imports extra.</p>
+
+<!-- ══════════════════ @if / @else if / @else ══════════════════ -->
+<section>
+  <h2>&#64;if — condicionales</h2>
+
+  <button (click)="alternarDetalle()">
+    {{ mostrarDetalle() ? 'Ocultar' : 'Mostrar' }} detalle
+  </button>
+
+  <!-- El bloque solo existe en el DOM si la condición es verdadera -->
+  @if (mostrarDetalle()) {
+    <div class="caja">
+      <p>Este bloque se crea y destruye con el click.</p>
+      <p>Track: &#64;if NO usa display:none — remueve el nodo del DOM.</p>
+    </div>
+  } @else {
+    <div class="caja apagado">
+      <p>Detalle oculto. Este es el bloque &#64;else.</p>
+    </div>
+  }
+
+  <!-- @else if también existe -->
+  @if (tareas().length === 0) {
+    <p><em>Sin tareas (lista vacía).</em></p>
+  } @else if (tareas().length < 3) {
+    <p><em>Pocas tareas. ¡Vas bien!</em></p>
+  } @else {
+    <p><em>{{ tareas().length }} tareas en la lista.</em></p>
+  }
+</section>
+
+<!-- ══════════════════ @for / @empty ══════════════════ -->
+<section>
+  <h2>&#64;for — listas</h2>
+
+  <button (click)="agregarTarea()">+ Agregar tarea</button>
+  <button (click)="vaciarLista()">Vaciar lista (demo &#64;empty)</button>
+
+  <ul>
+    <!-- track es OBLIGATORIO: identidad de cada ítem para render eficiente -->
+    <!-- Variables implícitas: $index, $first, $last, $even, $odd, $count -->
+    @for (tarea of tareas(); track tarea.id) {
+      <li [class.hecha]="tarea.hecha">
+        <!-- $index = posición en la lista -->
+        #{{ $index + 1 }} —
+        <strong>{{ tarea.titulo }}</strong>
+        <small>(prioridad: {{ tarea.prioridad }})</small>
+
+        @if ($first) { <span class="badge">primera</span> }
+        @if ($last)  { <span class="badge">última</span> }
+
+        <button (click)="alternarTarea(tarea.id)">
+          {{ tarea.hecha ? '↩' : '✓' }}
+        </button>
+      </li>
+    } @empty {
+      <!-- @empty: se muestra solo cuando la lista está vacía -->
+      <li><em>Lista vacía. Agrega una tarea.</em></li>
+    }
+  </ul>
+</section>
+
+<!-- ══════════════════ @switch / @case / @default ══════════════════ -->
+<section>
+  <h2>&#64;switch — pestañas</h2>
+
+  <nav>
+    <button (click)="irA('lista')">Lista</button>
+    <button (click)="irA('stats')">Stats</button>
+    <button (click)="irA('config')">Config</button>
+  </nav>
+
+  <!-- Solo UN @case se renderiza según el valor -->
+  @switch (pestana()) {
+    @case ('lista') {
+      <div class="caja">Vista de LISTA — aquí van las tareas.</div>
+    }
+    @case ('stats') {
+      <div class="caja">Vista de STATS — total: {{ tareas().length }} tareas.</div>
+    }
+    @case ('config') {
+      <div class="caja">Vista de CONFIG — ajustes del usuario.</div>
+    }
+    @default {
+      <div class="caja">Fallback si ningún case coincide.</div>
+    }
+  }
+</section>
