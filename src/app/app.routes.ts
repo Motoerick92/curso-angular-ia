@@ -7,6 +7,7 @@ import { Signals } from './features/signals/signals';
 import { Io } from './features/io/io';
 import { Servicios } from './features/servicios/servicios';
 import { authGuard } from './core/guards/auth-guard';
+import { HttpDemo } from './features/http-demo/http-demo';
 
 export const routes: Routes = [
   { path: '', component: Inicio },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'signals', component: Signals },
   { path: 'io', component: Io },
   { path: 'servicios', component: Servicios },
+  { path: 'http', component: HttpDemo },           // Módulo 10: HTTP
 
   // RUTA CON PARÁMETRO: :id llega como input (via withComponentInputBinding)
   // LAZY LOADING: loadComponent descarga el chunk SOLO al visitar la ruta

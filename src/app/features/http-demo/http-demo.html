@@ -1,0 +1,46 @@
+<h1>Módulo 10 — HttpClient + httpResource</h1>
+<p>
+  API real: JSONPlaceholder (https://jsonplaceholder.typicode.com).
+  Cambiar el límite relanza la request automáticamente.
+</p>
+
+<!-- Controles: cambiar signal → nueva request (gracias a httpResource) -->
+<div class="controles">
+  <button (click)="api.pedirMas()">Pedir +5 más</button>
+  <button (click)="api.recargar()">↻ Recargar</button>
+  <span>Pidiendo: <strong>{{ api.limite() }}</strong> tareas</span>
+</div>
+
+<!-- Estado de carga: .isLoading() del resource -->
+@if (api.tareasResource.isLoading()) {
+  <p class="estado">⏳ Cargando…</p>
+}
+
+<!-- Estado de error: .error() del resource -->
+@let error = api.tareasResource.error();
+@if (error) {
+  <p class="estado error">❌ Error al cargar: {{ error.message }}</p>
+}
+
+<!-- Datos: .value() puede ser undefined mientras carga -->
+@let tareas = api.tareasResource.value();
+@if (tareas) {
+  <ul>
+    @for (t of tareas; track t.id) {
+      <li [class.completada]="t.completed">
+        #{{ t.id }} — {{ t.title }}
+        (usuario {{ t.userId }})
+      </li>
+    }
+  </ul>
+}
+
+<section class="nota">
+  <h2>Qué pasó detrás</h2>
+  <ol>
+    <li><code>provideHttpClient(withInterceptors)</code> en <code>app.config.ts</code></li>
+    <li>El <strong>interceptor</strong> agrega header y loguea cada request (mira F12 → consola)</li>
+    <li><code>httpResource</code> relanza la request cuando cambia <code>limite()</code></li>
+    <li>El template reacciona solo: loading → datos (sin subscribe manual)</li>
+  </ol>
+</section>

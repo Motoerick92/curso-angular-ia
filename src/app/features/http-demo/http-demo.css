@@ -1,0 +1,41 @@
+.controles {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.estado {
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: #313244;
+}
+
+.estado.error {
+  background: #f38ba8;
+  color: #1e1e2e;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin: 0.4rem 0;
+  padding: 0.4rem;
+  border: 1px solid #45475a;
+  border-radius: 4px;
+}
+
+.completada {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.nota {
+  margin-top: 2rem;
+  border-top: 1px solid #45475a;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}
