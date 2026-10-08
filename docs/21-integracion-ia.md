@@ -56,7 +56,7 @@ Lo mismo en `configurarApiKey` al escribir.
 ## Probarlo
 1. Crea key gratis en https://openrouter.ai
 2. En `/ia` expande Configuración, pega la key, guarda.
-3. Modelo por defecto: `meta-llama/llama-3.2-3b-instruct:free` (free tier).
+3. Modelo por defecto: `google/gemini-2.0-flash-exp:free` (free tier).
 4. Pregunta algo — respuesta aparece sin recargar.
 
 ## Errores comunes
