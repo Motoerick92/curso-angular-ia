@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+// Title / Meta: servicios DOM del framework para SEO
+import { Title, Meta } from '@angular/platform-browser';
 
 // @Component: decorador que convierte esta clase TS en un componente Angular.
 // En Angular 22 TODO es standalone por defecto → no existe NgModule.
@@ -27,5 +29,15 @@ export class Inicio {
   // Método que muta estado: Angular detecta el cambio y actualiza la vista solo
   alternarCompletado(): void {
     this.completado = !this.completado;
+  }
+
+  // SEO por ruta: cada página setea su título y meta tags.
+  // Con SSR, estos tags llegan renderizados en el HTML inicial.
+  constructor() {
+    const title = inject(Title);
+    const meta = inject(Meta);
+    title.setTitle('Inicio | Curso Angular 22 + IA');
+    meta.updateTag({ name: 'description', content: 'Curso completo de Angular 22 con signals, control flow e IA.' });
+    meta.updateTag({ property: 'og:title', content: 'Curso Angular 22 + IA' });
   }
 }
