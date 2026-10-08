@@ -1,0 +1,49 @@
+<h1>Módulo 8 — Servicios e inyección</h1>
+<p>
+  El estado vive en <code>Tareas</code> (core/services).
+  Este componente solo INYECTA el servicio y lo usa.
+</p>
+
+<!-- ── Panel de estadísticas: derivados computeds del servicio ── -->
+<div class="stats">
+  <span>Total: <strong>{{ tareasSvc.total() }}</strong></span>
+  <span>Pendientes: <strong>{{ tareasSvc.pendientes() }}</strong></span>
+  <span>Hechas: <strong>{{ tareasSvc.completadas() }}</strong></span>
+</div>
+
+<!-- ── Formulario para agregar ── -->
+<!-- Template reference #nuevaTarea → variable local del DOM -->
+<div class="acciones">
+  <input #nuevaTarea
+         type="text"
+         placeholder="Nueva tarea..."
+         (keyup.enter)="alAgregar(nuevaTarea.value); nuevaTarea.value=''" />
+  <button (click)="alAgregar(nuevaTarea.value); nuevaTarea.value=''">Agregar</button>
+  <button class="danger" (click)="alLimpiar()">Limpiar todo</button>
+  <button (click)="alRestaurar()">Restaurar demo</button>
+</div>
+
+<!-- ── Lista delegada al mismo componente HIJO de M7 ── -->
+<!-- Reutilización: misma tarjeta, datos distintos (del servicio) -->
+@if (!tareasSvc.hayTareas()) {
+  <p><em>No hay tareas. ¡Agrega una!</em></p>
+} @else {
+  @for (tarea of tareasSvc.tareas(); track tarea.id) {
+    <!-- Reutilizamos TarjetaTarea SIN seleccionada (model opcional) -->
+    <app-tarjeta-tarea
+      [tarea]="tarea"
+      (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
+      (eliminar)="alEliminar($event)"
+    />
+  }
+}
+
+<section class="nota">
+  <h2>Puntos clave</h2>
+  <ul>
+    <li><code>inject(Tareas)</code> → obtiene el singleton del servicio</li>
+    <li><code>providedIn: 'root'</code> → una sola instancia en toda la app</li>
+    <li>Señal privada <code>_tareas</code> + <code>asReadonly()</code> = encapsulación</li>
+    <li>Los computeds se comparten: cualquier componente los lee igual</li>
+  </ul>
+</section>

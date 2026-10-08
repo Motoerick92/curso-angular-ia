@@ -5,6 +5,7 @@ import { ControlFlow } from './features/control-flow/control-flow';
 import { PipesDirectivas } from './features/pipes-directivas/pipes-directivas';
 import { Signals } from './features/signals/signals';
 import { Io } from './features/io/io';
+import { Servicios } from './features/servicios/servicios';
 
 export const routes: Routes = [
   { path: '', component: Inicio },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'control-flow', component: ControlFlow },
   { path: 'pipes-directivas', component: PipesDirectivas },
   { path: 'signals', component: Signals },
-  { path: 'io', component: Io },          // Módulo 7: inputs/outputs
+  { path: 'io', component: Io },
+  { path: 'servicios', component: Servicios },   // Módulo 8: servicios
 ];
