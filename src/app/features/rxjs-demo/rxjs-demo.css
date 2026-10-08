@@ -1,0 +1,37 @@
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 420px;
+}
+
+input {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+}
+
+.estado {
+  padding: 0.5rem;
+  background: #313244;
+  border-radius: 4px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 0.4rem;
+  border-bottom: 1px solid #45475a;
+}
+
+.nota {
+  margin-top: 2rem;
+  border-top: 1px solid #45475a;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}

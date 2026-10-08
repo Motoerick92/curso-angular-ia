@@ -1,0 +1,42 @@
+<h1>Módulo 13 — RxJS esencial</h1>
+<p>Buscador en vivo: <code>debounceTime</code> + <code>distinctUntilChanged</code> +
+   <code>switchMap</code> + <code>takeUntilDestroyed</code>.</p>
+
+<!-- FormControl reactivo sin formGroup: solo pasamos [formControl] -->
+<label>
+  🔎 Buscar usuario (username contiene...):
+  <input [formControl]="busqueda" placeholder="ej: bret" autocomplete="off" />
+</label>
+
+<!-- Estado reactivo: buscando cambia mientras RxJS procesa -->
+@if (buscando()) {
+  <p class="estado">⏳ Buscando… (request #{{ contadorRequests() }})</p>
+}
+
+@if (!buscando() && busqueda.value.length >= 2) {
+  @if (resultados().length === 0) {
+    <p><em>Sin coincidencias para "{{ busqueda.value }}".</em></p>
+  } @else {
+    <p>Encontrados: <strong>{{ resultados().length }}</strong></p>
+    <ul>
+      @for (u of resultados(); track u.id) {
+        <li>
+          <strong>{{ u.username }}</strong> — {{ u.name }}
+          <small>({{ u.email }})</small>
+        </li>
+      }
+    </ul>
+  }
+}
+
+<section class="nota">
+  <h2>El pipeline (orden importa)</h2>
+  <ol>
+    <li><code>debounceTime(300)</code> — espera 300ms de pausa antes de procesar</li>
+    <li><code>distinctUntilChanged()</code> — ignora valores repetidos</li>
+    <li><code>filter()</code> — solo busca con 2+ caracteres</li>
+    <li><code>switchMap()</code> — cancela la request anterior, solo la última vale</li>
+    <li><code>takeUntilDestroyed()</code> — limpieza automática al destruir componente</li>
+  </ol>
+  <p>Prueba: escribe rápido → solo UNA request final (mira consola → Network).</p>
+</section>
