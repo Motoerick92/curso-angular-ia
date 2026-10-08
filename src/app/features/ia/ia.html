@@ -1,0 +1,79 @@
+<h1>Módulo 21 — Integración de IA en Angular</h1>
+<p>
+  Chat contra cualquier API compatible con OpenAI. Por defecto:
+  <strong>OpenRouter</strong> con modelo gratuito
+  <code>llama-3.2-3b-instruct:free</code>.
+</p>
+
+<!-- ── Panel de configuración: key + endpoint + modelo ── -->
+<details class="config">
+  <summary>⚙ Configuración (click para expandir)</summary>
+
+  <label>
+    API key (se guarda en localStorage, solo tu navegador):
+    <input type="password"
+           [(ngModel)]="textoApiKey"
+           [placeholder]="ia.apiKey() ? '••••••• (guardada)' : 'sk-or-v1-...'" />
+  </label>
+
+  <label>
+    Modelo:
+    <input type="text" [(ngModel)]="textoModelo" />
+  </label>
+
+  <button (click)="guardarConfig()">Guardar configuración</button>
+
+  @if (ia.apiKey()) {
+    <small class="ok">✓ Key configurada</small>
+  } @else {
+    <small class="error">
+      Sin key — crea una gratis en https://openrouter.ai y pégala aquí.
+    </small>
+  }
+</details>
+
+<!-- ── Error global de la última request ── -->
+@let errorMsg = ia.error();
+@if (errorMsg) {
+  <div class="error-bar">❌ {{ errorMsg }}</div>
+}
+
+<!-- ── Historial del chat ── -->
+<div class="chat">
+  @if (ia.historial().length === 0) {
+    <p class="vacio">
+      💬 Todavía no hay mensajes. Configura la key arriba y pregunta algo.
+    </p>
+  } @else {
+    @for (m of ia.historial(); track $index) {
+      <!-- Burbujas distintas según el rol -->
+      <div class="burbuja" [class.usuario]="m.rol === 'user'"
+                            [class.asistente]="m.rol === 'assistant'">
+        <span class="rol">{{ m.rol === 'user' ? 'Tú' : 'IA' }}</span>
+        <p>{{ m.contenido }}</p>
+      </div>
+    }
+  }
+
+  <!-- Indicador mientras espera la respuesta -->
+  @if (ia.cargando()) {
+    <div class="burbuja asistente cargando">
+      <span class="rol">IA</span>
+      <p>escribiendo…</p>
+    </div>
+  }
+</div>
+
+<!-- ── Input de chat ── -->
+<div class="input-chat">
+  <input #caja
+         type="text"
+         placeholder="Escribe y presiona Enter…"
+         [disabled]="ia.cargando() || !ia.apiKey()"
+         (keyup.enter)="enviar(caja.value, caja)" />
+  <button [disabled]="ia.cargando() || !ia.apiKey()"
+          (click)="enviar(caja.value, caja)">
+    Enviar
+  </button>
+  <button (click)="ia.limpiar()">Limpiar chat</button>
+</div>

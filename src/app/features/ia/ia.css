@@ -1,0 +1,92 @@
+.config {
+  border: 1px solid #45475a;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  max-width: 600px;
+}
+
+.config label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.config input {
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+}
+
+.ok { color: #a6e3a1; }
+.error { color: #f38ba8; }
+
+.error-bar {
+  background: #f38ba8;
+  color: #1e1e2e;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.vacio {
+  padding: 1rem;
+  background: #313244;
+  border-radius: 8px;
+  font-style: italic;
+}
+
+.burbuja {
+  max-width: 75%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+}
+
+.burbuja.usuario {
+  align-self: flex-end;
+  background: #313244;
+}
+
+.burbuja.asistente {
+  align-self: flex-start;
+  background: #1e1e2e;
+  border: 1px solid #45475a;
+}
+
+.burbuja.cargando {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.rol {
+  font-size: 0.75rem;
+  color: #89b4fa;
+  font-weight: bold;
+}
+
+.input-chat {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 600px;
+  position: sticky;
+  bottom: 1rem;
+}
+
+.input-chat input {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+}
