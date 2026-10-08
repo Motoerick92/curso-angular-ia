@@ -1,0 +1,21 @@
+<!-- INTERPOLACIÓN {{ expresión }}: Angular evalúa la expresión TS y pinta el resultado -->
+
+<!-- 1) Propiedad simple de la clase -->
+<h1>{{ titulo }}</h1>
+
+<!-- 2) Getter (se comporta como propiedad calculada) -->
+<p>{{ progreso }}</p>
+
+<!-- 3) Llamada a método de la clase -->
+<p>{{ saludar() }}</p>
+
+<!-- 4) Operador ternario dentro de la interpolación -->
+<p>Estado: {{ completado ? 'COMPLETADO ✅' : 'en curso...' }}</p>
+
+<!-- 5) Operador de navegación segura ?. — evita crash si el objeto es null/undefined -->
+<!-- <p>Alumno: {{ alumno?.nombre }}</p> -->
+
+<!-- Avance de Módulo 3: event binding (click) → ejecuta método de la clase -->
+<button (click)="alternarCompletado()">
+  {{ completado ? 'Desmarcar' : 'Marcar completado' }}
+</button>
