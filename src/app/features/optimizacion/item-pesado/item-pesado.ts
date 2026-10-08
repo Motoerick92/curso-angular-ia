@@ -1,30 +1,36 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
 
 // ═══════════════════════════════════════════════════════════════
 // COMPONENTE OnPush: Angular solo revisa su template cuando:
-//  1. Cambia una de sus inputs (por referencia o valor de signal)
-//  2. Se dispara un evento DENTRO de él
+//  1. Cambia su input (por referencia o valor de signal)
+//  2. Se dispara un evento DOM DENTRO de él
 //  3. Un signal que leyó cambió
 // Ignora el resto de la app → render granular y rápido.
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-item-pesado',
-  changeDetection: ChangeDetectionStrategy.OnPush,  // ← la clave
+  changeDetection: ChangeDetectionStrategy.OnPush,   // ← la clave
   imports: [],
   templateUrl: './item-pesado.html',
+  styleUrl: './item-pesado.css',
 })
 export class ItemPesado {
-  // Input: si el padre pasa el MISMO objeto (misma referencia), no re-renderiza.
-  // Si muta y crea uno nuevo → re-render solo de este ítem.
+  // Input del padre. Con OnPush, si la referencia no cambia,
+  // este template NO se reevalúa aunque la app esté "viva".
   dato = input.required<{ id: number; titulo: string }>();
 
-  // Contador interno: cuántas veces Angular evaluó este template
-  // (lo incrementa un método llamado desde el template — técnica de debug)
-  rendersInternos = signal(0);
+  // Contador PLANO (no signal): se incrementa en ngAfterViewChecked.
+  // ・ngAfterViewChecked corre DESPUÉS de cada chequeo del template.
+  // ・Prohibido escribir signals durante la renderización → NG0600.
+  rendersInternos = 0;
 
-  // Llamado en cada evaluación del template — deja evidencia del render
-  registrarRender(): string {
-    this.rendersInternos.update((n) => n + 1);
-    return `renders: ${this.rendersInternos()}`;
+  // Hook del ciclo de vida: cada vez que Angular evaluó este template
+  // (porque cambió su input o por un evento interno).
+  ngAfterViewChecked(): void {
+    this.rendersInternos++;
   }
 }

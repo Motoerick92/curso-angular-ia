@@ -47,21 +47,27 @@ total = computed(() => this.items().length);
 - Angular memoriza el resultado y solo recalcula si cambia la dependencia.
 - Evita `{ { items().length } }` evaluado en cada ciclo.
 
-## Técnica de debug: contador de renders
-En `item-pesado.html`:
-```html
-<span>{{ registrarRender() }}</span>
+## Técnica de debug: contador de renders (POST-FIX)
+Primera versión usaba `signal` escrito durante render → error NG0600:
+
 ```
-y en el hijo:
+NG0600: Writing to signals is not allowed while Angular renders the template
+```
+
+**Fix real**: contar en el hook `ngAfterViewChecked`, que corre DESPUÉS
+del render, con propiedad plana (no signal):
 ```ts
-registrarRender(): string {
-  this.rendersInternos.update((n) => n + 1);
-  return `renders: ${this.rendersInternos()}`;
+rendersInternos = 0;               // propiedad plana, no signal
+
+ngAfterViewChecked(): void {
+  this.rendersInternos++;          // ← se corre post-render, permitido
 }
 ```
-- **Funciona porque el template llama método → detección en cada evaluación.**
-- Signal interno sube SOLO si Angular evaluó ese template.
-- Demo en vivo: los ítems sin cambios quedan quietos, el renombrado sube.
+```html
+<span class="contador">renders: {{ rendersInternos }}</span>
+```
+Lección: signals se escriben fuera del ciclo de render (eventos,
+métodos del padre, efectos). Dentro del template, todo es lectura.
 
 ## Medición real
 - F12 → Performance → record → clic en "Renombrar" → ver frame
