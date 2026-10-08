@@ -1,0 +1,61 @@
+<h1>Módulo 18 — Directivas estructurales custom</h1>
+<p>
+  Recreamos la magia de <code>*ngIf</code> / <code>*ngFor</code> con
+  <code>TemplateRef</code> + <code>ViewContainerRef</code>.
+</p>
+
+<!-- ══ DEMO 1: *appRepetir ══ -->
+<section>
+  <h2>&#42;appRepetir — repetir bloque N veces</h2>
+
+  <div class="controles">
+    <button (click)="disminuir()">−</button>
+    <span>Repeticiones: <strong>{{ repeticiones() }}</strong></span>
+    <button (click)="aumentar()">+</button>
+  </div>
+
+  <!-- El * descompone a <ng-template> que captura el contenido -->
+  <!-- let i = $implicit → variable local del bucle -->
+  <p *appRepetir="repeticiones(); let i = $implicit" class="copia">
+    Copia #{{ i }} — generada por la directiva
+  </p>
+</section>
+
+<!-- ══ DEMO 2: *appSiRol ══ -->
+<section>
+  <h2>&#42;appSiRol — visibilidad por usuario</h2>
+
+  @if (auth.logueado()) {
+    <p>Usuario actual: <strong>{{ auth.usuario() }}</strong>
+       (usa el login del header para cambiarlo)</p>
+  } @else {
+    <p><em>No logueado — ninguna caja se muestra.</em></p>
+  }
+
+  <!-- Solo visible si el usuario está en la lista de roles permitidos -->
+  <div class="caja" *appSiRol="['admin', 'erick']">
+    🔑 Zona ADMIN/ERICK — contenido restringido visible
+  </div>
+
+  <div class="caja" *appSiRol="['editor']">
+    ✏️ Zona EDITOR — solo si tu usuario es "editor"
+  </div>
+
+  <div class="caja" *appSiRol="['nadie']">
+    🚫 Zona imposible — nunca verás esto sin cambiar código
+  </div>
+</section>
+
+<!-- ══ Nota ══ -->
+<section class="nota">
+  <h2>Cómo funcionan las directivas estructurales</h2>
+  <ol>
+    <li>El asterisco <code>*</code> envuelve el contenido en un
+        <code>&lt;ng-template&gt;</code> (no se renderiza solo).</li>
+    <li><code>TemplateRef</code> captura esa plantilla en la directiva.</li>
+    <li><code>ViewContainerRef</code> es el ancla del DOM donde insertarla.</li>
+    <li><code>createEmbeddedView(tpl, contexto)</code> crea cada copia.</li>
+    <li>El contexto <code>&#123; $implicit: i &#125;</code> habilita
+        <code>let i = $implicit</code> en el template.</li>
+  </ol>
+</section>
