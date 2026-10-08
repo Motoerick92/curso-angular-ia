@@ -13,6 +13,7 @@ import { FormReactivo } from './features/form-reactivo/form-reactivo';
 import { RxjsDemo } from './features/rxjs-demo/rxjs-demo';
 import { Comunicacion } from './features/comunicacion/comunicacion';
 import { AsyncPipeDemo } from './features/async-pipe/async-pipe';
+import { StoreDemo } from './features/store-demo/store-demo';
 
 export const routes: Routes = [
   { path: '', component: Inicio },
@@ -28,6 +29,7 @@ export const routes: Routes = [
   { path: 'rxjs', component: RxjsDemo },               // Módulo 13: RxJS
   { path: 'comunicacion', component: Comunicacion },   // Módulo 14: comunicación
   { path: 'async-pipe', component: AsyncPipeDemo },    // Módulo 15: pipe async
+  { path: 'store', component: StoreDemo },             // Módulo 16: state management
 
   // RUTA CON PARÁMETRO: :id llega como input (via withComponentInputBinding)
   // LAZY LOADING: loadComponent descarga el chunk SOLO al visitar la ruta

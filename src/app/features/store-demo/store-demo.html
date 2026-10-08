@@ -1,0 +1,52 @@
+<h1>Módulo 16 — State management con store</h1>
+<p>
+  Mismo concepto que M8, pero con estado desnormalizado
+  (<code>entidades</code> + <code>orden</code>) y filtros reactivos.
+</p>
+
+<!-- ── Barra de filtros: el filtro VIVE en el store ── -->
+<div class="filtros">
+  <button [class.activo]="filtro() === 'todas'"
+          (click)="store.establecerFiltro('todas')">
+    Todas ({{ store.total() }})
+  </button>
+  <button [class.activo]="filtro() === 'pendientes'"
+          (click)="store.establecerFiltro('pendientes')">
+    Pendientes ({{ store.total() - store.completadas() }})
+  </button>
+  <button [class.activo]="filtro() === 'hechas'"
+          (click)="store.establecerFiltro('hechas')">
+    Hechas ({{ store.completadas() }})
+  </button>
+</div>
+
+<!-- ── Input rápido para agregar ── -->
+<div class="agregar">
+  <input #nuevaTarea
+         type="text"
+         placeholder="Nueva tarea del store…"
+         (keyup.enter)="alAgregar(nuevaTarea)" />
+  <button (click)="alAgregar(nuevaTarea)">+ Agregar</button>
+</div>
+
+<!-- ── Lista: selección activa según filtro ── -->
+@if (visibles().length === 0) {
+  <p class="vacio">
+    @if (store.total() === 0) { Sin tareas en el store. }
+    @else { Ninguna coincide con el filtro "{{ filtro() }}". }
+  </p>
+} @else {
+  @for (tarea of visibles(); track tarea.id) {
+    <app-tarjeta-tarea
+      [tarea]="tarea"
+      (hechaCambiada)="store.alternar(tarea.id)"
+      (eliminar)="store.eliminar(tarea.id)"
+    />
+  }
+}
+
+<!-- ── Mini-debug: estado crudo serializado ── -->
+<details>
+  <summary>Ver estado interno del store</summary>
+  <pre>{{ store.debugEstado() }}</pre>
+</details>

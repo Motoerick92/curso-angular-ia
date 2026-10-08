@@ -1,0 +1,54 @@
+.filtros {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filtros button {
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+  cursor: pointer;
+}
+
+.filtros button.activo {
+  background: #89b4fa;
+  color: #1e1e2e;
+  font-weight: bold;
+}
+
+.agregar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.agregar input {
+  flex: 1;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+}
+
+.vacio {
+  padding: 1rem;
+  background: #313244;
+  border-radius: 4px;
+  font-style: italic;
+}
+
+details {
+  margin-top: 2rem;
+}
+
+pre {
+  background: #181825;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  overflow: auto;
+}
