@@ -1,0 +1,64 @@
+<h1>Módulo 5 — Directivas y Pipes</h1>
+
+<!-- ══════════ PIPES BUILT-IN ══════════ -->
+<section>
+  <h2>Pipes built-in (transformación de datos en template)</h2>
+
+  <!-- Sintaxis: {{ valor | pipe:argumento }} -->
+  <!-- UpperCasePipe: texto → MAYÚSCULAS -->
+  <p>uppercase: {{ frase() | uppercase }}</p>
+
+  <!-- TitleCasePipe: Primera Letra De Cada Palabra -->
+  <p>titlecase: {{ frase() | titlecase }}</p>
+
+  <!-- CurrencyPipe: formatea moneda con código (USD, EUR, MXN...) -->
+  <p>currency: {{ precio() | currency:'USD' }}</p>
+
+  <!-- DatePipe: formatos de fecha ('short', 'long', patrones yyyy-MM-dd...) -->
+  <p>date (short): {{ hoy() | date:'short' }}</p>
+  <p>date (custom): {{ hoy() | date:"EEEE d 'de' MMMM yyyy" }}</p>
+
+  <!-- SlicePipe: recorta arrays/strings [inicio:fin] -->
+  <p>slice de array: {{ tecnologias() | slice:0:3 }}</p>
+
+  <!-- JsonPipe: vuelca objeto como JSON — ideal para debug -->
+  <pre>json: {{ objetoDemo() | json }}</pre>
+</section>
+
+<!-- ══════════ PIPE CUSTOM ══════════ -->
+<section>
+  <h2>Pipe custom: truncate</h2>
+
+  <!-- Nuestro pipe con argumento por defecto (25) -->
+  <p>{{ textoLargo() | truncate }}</p>
+
+  <!-- El mismo pipe con argumento explícito tras ":" -->
+  <p>{{ textoLargo() | truncate:40 }}</p>
+</section>
+
+<!-- ══════════ DIRECTIVAS BUILT-IN ══════════ -->
+<section>
+  <h2>Directivas built-in: ngClass y ngStyle</h2>
+
+  <!-- [ngClass]: aplica clases CSS condicionalmente con objeto -->
+  <p [ngClass]="{ 'verde': precio() > 1000, 'grande': true }">
+    Precio alto = verde ([ngClass] con objeto)
+  </p>
+
+  <!-- [ngStyle]: estilos inline dinámicos -->
+  <p [ngStyle]="{ 'font-size.px': precio() / 100, 'color': precio() > 1000 ? 'green' : 'gray' }">
+    Tamaño proporcional al precio ([ngStyle])
+  </p>
+</section>
+
+<!-- ══════════ DIRECTIVA CUSTOM ══════════ -->
+<section>
+  <h2>Directiva custom: appResaltar</h2>
+
+  <!-- Nuestra directiva: resalta al pasar el mouse (color default) -->
+  <p appResaltar>Pasa el mouse: resalte amarillo (default)</p>
+
+  <!-- Input de la directiva: personalizar color -->
+  <p appResaltar color="#a6e3a1">Pasa el mouse: resalte verde (color personalizado)</p>
+  <p appResaltar color="#f9e2af">Pasa el mouse: resalte ámbar</p>
+</section>

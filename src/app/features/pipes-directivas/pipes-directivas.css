@@ -1,0 +1,13 @@
+/* Clases que activa [ngClass] */
+.verde {
+  color: #a6e3a1;
+  font-weight: bold;
+}
+
+.grande {
+  font-size: 1.25rem;
+}
+
+section {
+  margin-bottom: 1.5rem;
+}
