@@ -30,6 +30,8 @@ export class IaService {
   readonly historial = signal<MensajeIa[]>([]);
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
+  // Modo streaming: si true, la respuesta llega por chunks SSE
+  readonly streaming = signal(true);
 
   // ── Guardar config y recordarla ──
   configurarApiKey(key: string): void {
@@ -53,7 +55,19 @@ export class IaService {
     this.error.set(null);
 
     try {
-      // fetch nativo con POST: sin necesidad de HttpClient para esta demo
+      if (this.streaming()) await this.preguntarConStream();
+      else await this.preguntarSinStream();
+    } catch (e) {
+      this.error.set(e instanceof Error ? e.message : 'Error desconocido');
+      // Quitamos el turno del usuario para permitir reintento limpio
+      this.historial.update((h) => h.slice(0, -1));
+    } finally {
+      this.cargando.set(false);
+    }
+  }
+
+  // ── M21: request sin streaming (respuesta completa) ──
+  private async preguntarSinStream(): Promise<void> {
       const respuesta = await fetch(`${this.baseUrl()}/chat/completions`, {
         method: 'POST',
         headers: {
@@ -80,13 +94,69 @@ export class IaService {
 
       // Turno del asistente, también inmutable
       this.historial.update((h) => [...h, { rol: 'assistant', contenido: contenidoIa }]);
-    } catch (e) {
-      this.error.set(e instanceof Error ? e.message : 'Error desconocido');
-      // Quitamos el turno del usuario para permitir reintento limpio
-      this.historial.update((h) => h.slice(0, -1));
-    } finally {
-      this.cargando.set(false);
+  }
+
+  // ── M22: STREAMING con Server-Sent Events (SSE) ──
+  // La respuesta llega en chunks: data: {"choices":[{"delta":{"content":"..."}}]}
+  // Parseamos línea a línea y actualizamos el ÚLTIMO mensaje del historial.
+  private async preguntarConStream(): Promise<void> {
+    const respuesta = await fetch(`${this.baseUrl()}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.apiKey()}`,
+      },
+      body: JSON.stringify({
+        model: this.modelo(),
+        messages: this.historial().map((m) => ({ role: m.rol, content: m.contenido })),
+        stream: true,   // ← clave: la API devuelve un stream SSE
+      }),
+    });
+
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}: ${await respuesta.text()}`);
+    if (!respuesta.body) throw new Error('Respuesta sin cuerpo');
+
+    // Creamos el turno del asistente VACÍO y lo vamos rellenando
+    this.historial.update((h) => [...h, { rol: 'assistant', contenido: '' }]);
+
+    const lector = respuesta.body.getReader();
+    const decodificador = new TextDecoder();
+    let buffer = '';
+
+    // Bucle de lectura: read() resuelve con cada chunk de bytes
+    while (true) {
+      const { done, value } = await lector.read();
+      if (done) break;
+
+      // Los chunks pueden cortar líneas a la mitad → acumulamos en buffer
+      buffer += decodificador.decode(value, { stream: true });
+
+      // SSE separa eventos con línea en blanco; cada línea empieza "data: "
+      const lineas = buffer.split('\n');
+      buffer = lineas.pop() ?? '';   // guarda la posible línea incompleta
+
+      for (const linea of lineas) {
+        if (!linea.startsWith('data: ')) continue;
+        const payload = linea.slice(6).trim();
+        if (payload === '[DONE]') break;   // fin del stream
+
+        try {
+          const json = JSON.parse(payload);
+          const delta: string = json.choices?.[0]?.delta?.content ?? '';
+          if (delta) this.anexarAlUltimo(delta);
+        } catch {
+          // chunk de keep-alive o JSON cortado: ignorar
+        }
+      }
     }
+  }
+
+  // Rellena el último turno del historial (el del asistente en curso)
+  private anexarAlUltimo(pedazo: string): void {
+    this.historial.update((h) => {
+      const ultimo = h[h.length - 1];
+      return [...h.slice(0, -1), { ...ultimo, contenido: ultimo.contenido + pedazo }];
+    });
   }
 
   limpiar(): void {

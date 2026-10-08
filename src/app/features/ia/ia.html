@@ -1,4 +1,4 @@
-<h1>Módulo 21 — Integración de IA en Angular</h1>
+<h1>Módulo 21/22 — Chat IA (con streaming)</h1>
 <p>
   Chat contra cualquier API compatible con OpenAI. Por defecto:
   <strong>OpenRouter</strong> con modelo gratuito
@@ -22,6 +22,14 @@
   </label>
 
   <button (click)="guardarConfig()">Guardar configuración</button>
+
+  <!-- M22: toggle de modo streaming -->
+  <label class="toggle">
+    <input type="checkbox"
+           [checked]="ia.streaming()"
+           (change)="ia.streaming.set(!ia.streaming())" />
+    Streaming (token a token)
+  </label>
 
   @if (ia.apiKey()) {
     <small class="ok">✓ Key configurada</small>

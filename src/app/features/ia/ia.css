@@ -13,6 +13,17 @@
   margin: 0.5rem 0;
 }
 
+.toggle {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.toggle input {
+  width: auto;
+}
+
 .config input {
   padding: 0.4rem;
   border-radius: 4px;
