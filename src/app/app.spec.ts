@@ -1,24 +1,28 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
+import { routes } from './app.routes';
 
-describe('App', () => {
+// App usa RouterOutlet/RouterLink → necesita provider del router en tests.
+describe('App (shell raíz)', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-    })
-      .compileComponents();
+      providers: [provideRouter(routes)],
+    }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('crea la app', () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('renderiza la barra de navegación con los enlaces de módulos', () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, curso-angular-ia');
+    fixture.detectChanges();
+    const html = fixture.nativeElement as HTMLElement;
+    expect(html.querySelector('nav')).toBeTruthy();
+    expect(html.textContent).toContain('Inicio');
+    expect(html.textContent).toContain('Signals');
   });
 });

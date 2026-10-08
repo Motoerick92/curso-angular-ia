@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AsyncPipe } from './async-pipe';
+import { AsyncPipeDemo } from './async-pipe';
 
-describe('AsyncPipe', () => {
-  let component: AsyncPipe;
-  let fixture: ComponentFixture<AsyncPipe>;
+describe('AsyncPipeDemo', () => {
+  let component: AsyncPipeDemo;
+  let fixture: ComponentFixture<AsyncPipeDemo>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AsyncPipe],
+      imports: [AsyncPipeDemo],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AsyncPipe);
+    fixture = TestBed.createComponent(AsyncPipeDemo);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
