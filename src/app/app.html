@@ -1,5 +1,11 @@
-<!-- Shell raíz: <router-outlet /> es el hueco donde el router
-     inyecta el componente de la ruta activa -->
+<!-- Shell raíz con navegación SPA -->
+<nav>
+  <!-- routerLink navega sin recargar página; routerLinkActive agrega clase CSS cuando la ruta está activa -->
+  <a routerLink="/" routerLinkActive="activo">Inicio</a> |
+  <a routerLink="/binding" routerLinkActive="activo">Binding</a>
+</nav>
+
 <main>
+  <!-- Aquí se inyecta el componente de la ruta activa -->
   <router-outlet />
 </main>

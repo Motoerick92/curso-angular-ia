@@ -1,0 +1,33 @@
+<h1>Módulo 3 — Data Binding</h1>
+
+<!-- ══ 1. INTERPOLACIÓN: clase → template (texto) ══ -->
+<p>Alumno: {{ nombre() }}</p>
+
+<!-- ══ 2. PROPERTY BINDING [propiedad]="expresión": clase → template ══ -->
+<!-- Enlaza una PROPIEDAD del DOM con un valor TS -->
+<input [value]="nombre()" [disabled]="botonDeshabilitado()" />
+
+<!-- Property binding en imagen: [src] apunta al signal -->
+<img [src]="urlImagen()" alt="Logo Angular" width="80" />
+
+<!-- ══ 3. EVENT BINDING (evento)="método()": template → clase ══ -->
+<!-- Angular escucha el evento DOM y ejecuta el método de la clase -->
+<button (click)="contarClic()" [disabled]="botonDeshabilitado()">
+  Clic aquí
+</button>
+<p>Clics registrados: {{ clics() }}</p>
+
+<button (click)="alternarBoton()">
+  {{ botonDeshabilitado() ? 'Habilitar' : 'Deshabilitar' }} botón de clics
+</button>
+
+<!-- ══ 4. TWO-WAY BINDING [(ngModel)]: bidireccional ══ -->
+<!-- Editar el input actualiza el signal; cambiar el signal actualiza el input -->
+<label>
+  Editar nombre (two-way):
+  <input [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" />
+</label>
+<p>
+  El nombre ahora vale: <strong>{{ nombre() }}</strong>
+  — fíjate que se actualiza en TODOS lados al mismo tiempo
+</p>
