@@ -1,0 +1,34 @@
+<h1>Módulo 7 — Inputs / Outputs / Model</h1>
+<p>El padre tiene el estado. El hijo recibe datos y emite eventos. Así funciona la comunicación.</p>
+
+<!-- Estadística del padre — se actualiza cuando el hijo emite cambios -->
+<p>
+  Completadas: <strong>{{ completadas() }} de {{ tareas().length }}</strong> |
+  Seleccionadas: <strong>{{ idsSeleccionados().length }}</strong>
+</p>
+
+@if (tareas().length === 0) {
+  <p><em>Todas las tareas eliminadas. Recarga para volver a empezar.</em></p>
+} @else {
+  <!-- @for apunta al signal; Angular repinta solo lo necesario -->
+  @for (tarea of tareas(); track tarea.id) {
+    <app-tarjeta-tarea
+      [tarea]="tarea"
+      [mostrarBotones]="true"
+      [seleccionada]="idsSeleccionados().includes(tarea.id)"
+      (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
+      (eliminar)="alEliminar($event)"
+      (seleccionadaChange)="alAlternarSeleccion(tarea.id, $event)"
+    />
+  }
+}
+
+<!-- Leyenda para entender qué sintaxis hace qué -->
+<section class="leyenda">
+  <h2>Clave de sintaxis</h2>
+  <ul>
+    <li><code>[tarea]="..."</code> → envía datos AL hijo (input)</li>
+    <li><code>(hechaCambiada)="..."</code> → escucha eventos DEL hijo (output)</li>
+    <li><code>[(seleccionada)]="..."</code> → two-way binding con model()</li>
+  </ul>
+</section>

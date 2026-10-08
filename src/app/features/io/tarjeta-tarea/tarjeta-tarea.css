@@ -1,0 +1,32 @@
+.tarjeta {
+  border: 1px solid #45475a;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.prioridad-alta  { border-left: 6px solid #f38ba8; }
+.prioridad-media { border-left: 6px solid #f9e2af; }
+.prioridad-baja  { border-left: 6px solid #a6e3a1; }
+
+.chip {
+  background: #313244;
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 0.8rem;
+}
+
+.hecha {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+.danger {
+  background: #f38ba8;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

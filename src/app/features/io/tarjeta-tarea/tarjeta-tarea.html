@@ -1,0 +1,24 @@
+<!-- Tarjeta hija: solo pinta y emite — no muta la tarea directamente -->
+<!-- [class.X] usa el computed “clasePrioridad” del hijo -->
+<div class="tarjeta" [class]="clasePrioridad()">
+
+  <!-- El título viene del input -->
+  <strong [class.hecha]="tarea().hecha">{{ tarea().titulo }}</strong>
+
+  <span class="chip">{{ tarea().prioridad }}</span>
+
+  <!-- model two-way: click = alternar selección en ambos lados -->
+  <input type="checkbox"
+         [checked]="seleccionada()"
+         (change)="alternarSeleccion()" />
+  <label>Seleccionar</label>
+
+  @if (mostrarBotones()) {
+    <!-- Botones del hijo: EMITEN eventos, el padre decide qué hacer -->
+    <button (click)="alternarHecha()">
+      {{ tarea().hecha ? '↩ Pendiente' : '✓ Hecha' }}
+    </button>
+
+    <button class="danger" (click)="emitirEliminar()">🗑 Eliminar</button>
+  }
+</div>
