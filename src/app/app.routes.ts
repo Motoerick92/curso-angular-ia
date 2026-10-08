@@ -12,6 +12,7 @@ import { FormTemplate } from './features/form-template/form-template';
 import { FormReactivo } from './features/form-reactivo/form-reactivo';
 import { RxjsDemo } from './features/rxjs-demo/rxjs-demo';
 import { Comunicacion } from './features/comunicacion/comunicacion';
+import { AsyncPipeDemo } from './features/async-pipe/async-pipe';
 
 export const routes: Routes = [
   { path: '', component: Inicio },
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'form-reactivo', component: FormReactivo },  // Módulo 12: reactive forms
   { path: 'rxjs', component: RxjsDemo },               // Módulo 13: RxJS
   { path: 'comunicacion', component: Comunicacion },   // Módulo 14: comunicación
+  { path: 'async-pipe', component: AsyncPipeDemo },    // Módulo 15: pipe async
 
   // RUTA CON PARÁMETRO: :id llega como input (via withComponentInputBinding)
   // LAZY LOADING: loadComponent descarga el chunk SOLO al visitar la ruta

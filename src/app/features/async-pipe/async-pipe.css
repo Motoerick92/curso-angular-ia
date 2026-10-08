@@ -1,0 +1,42 @@
+section {
+  margin-bottom: 1.5rem;
+}
+
+.post {
+  border: 1px solid #89b4fa;
+  border-radius: 8px;
+  padding: 1rem;
+  max-width: 600px;
+}
+
+.post h3 {
+  margin-top: 0;
+  color: #89b4fa;
+}
+
+.post p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.nota {
+  border-top: 1px solid #45475a;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 200px;
+  margin-bottom: 0.5rem;
+}
+
+input {
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+}

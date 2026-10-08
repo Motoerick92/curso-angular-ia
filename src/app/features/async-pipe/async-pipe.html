@@ -1,0 +1,50 @@
+<h1>Módulo 15 — Pipe async + estado simple</h1>
+<p>
+  Conectar Observables directo al template sin subscribe manual.
+</p>
+
+<!-- ══ DEMO 1: timer con async pipe ══ -->
+<section>
+  <h2>Demo 1: reloj con timer observable</h2>
+  <!-- | async = se suscribe, muestra el último valor, se desuscribe solo -->
+  <p>Segundos desde que entraste: <strong>{{ reloj$ | async }}</strong></p>
+  <small>Cambia cada 1s sin código extra en el componente.</small>
+</section>
+
+<!-- ══ DEMO 2: post desde API con BehaviorSubject ══ -->
+<section>
+  <h2>Demo 2: buscar post por id (BehaviorSubject + switchMap)</h2>
+
+  <!-- Control para elegir el id -->
+  <label>
+    Id del post (1-100):
+    <input type="number" [formControl]="idControl" min="1" max="100" />
+  </label>
+
+  <button (click)="cambiarId(idControl.value)">Buscar post</button>
+
+  <p>Post actual: <strong>#{{ postIdActual$ | async }}</strong></p>
+
+  <!-- async pipe directo sobre el observable de datos -->
+  <!-- Con @let + @if mejoramos la vista cuando aún no hay datos -->
+  @let post = post$ | async;
+
+  @if (post) {
+    <article class="post">
+      <h3>#{{ post.id }} — {{ post.title }}</h3>
+      <p>{{ post.body }}</p>
+    </article>
+  } @else {
+    <p><em>Cargando…</em></p>
+  }
+</section>
+
+<!-- ══ Resumen ══ -->
+<section class="nota">
+  <h2>¿Signals o async pipe?</h2>
+  <ul>
+    <li><strong>Signals</strong>: estado mutable con valores coherentes (todo el curso).</li>
+    <li><strong>async pipe</strong>: streams largos (timers, websockets) o librerías RxJS.</li>
+    <li>Ambos conviven perfectamente — Angular 22 soporta los dos.</li>
+  </ul>
+</section>
