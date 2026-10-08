@@ -1,0 +1,48 @@
+<h1>Módulo 14 — Comunicación entre componentes</h1>
+<p>Tres patrones según la distancia entre componentes.</p>
+
+<!-- ══ ① SERVICIO PUENTE: entre cualquier parte de la app ══ -->
+<section>
+  <h2>① Servicio compartido (puente)</h2>
+  <p>
+    El estado del servicio es visible en CUALQUIER componente que lo
+    inyecte — incluso si están en rutas distintas.
+  </p>
+
+  <button (click)="enviarMensaje('esta página')">Enviar mensaje desde aquí</button>
+
+  <p>Mensaje actual en el puente: <strong>{{ puente.mensaje() }}</strong></p>
+
+  <small>
+    Ve a otra ruta, vuelve — el mensaje sigue ahí porque el servicio es
+    singleton (<code>providedIn: 'root'</code>).
+  </small>
+</section>
+
+<!-- ══ ② viewChild: padre controla hijo directo ══ -->
+<section>
+  <h2>② viewChild() — el padre llama métodos del hijo</h2>
+
+  <!-- El hijo NO recibe inputs. Vive su propia vida. -->
+  <app-contador-hijo />
+
+  <!-- Pero el padre puede invocar sus métodos por referencia -->
+  <button (click)="resetearDesdeElPadre()">Resetear hijo desde el PADRE</button>
+</section>
+
+<!-- ══ Guía rápida ══ -->
+<section class="nota">
+  <h2>¿Qué patrón usar cuándo?</h2>
+  <table>
+    <thead>
+      <tr><th>Relación</th><th>Patrón</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Padre → hijo (datos)</td><td><code>input()</code></td></tr>
+      <tr><td>Hijo → padre (evento)</td><td><code>output()</code></td></tr>
+      <tr><td>Padre invoca método del hijo</td><td><code>viewChild()</code></td></tr>
+      <tr><td>Hermanos / rutas distintas</td><td><code>servicio + signals</code></td></tr>
+      <tr><td>Estado global de la app</td><td><code>servicio singleton</code></td></tr>
+    </tbody>
+  </table>
+</section>

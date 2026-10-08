@@ -1,0 +1,30 @@
+section {
+  margin-bottom: 1.5rem;
+}
+
+.hijo {
+  border: 1px dashed #89b4fa;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #45475a;
+  padding: 0.4rem 0.75rem;
+  text-align: left;
+}
+
+th {
+  background: #313244;
+}
+
+.nota {
+  border-top: 1px solid #45475a;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}
