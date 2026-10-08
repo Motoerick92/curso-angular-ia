@@ -1,0 +1,45 @@
+<h1>Módulo 6 — Signals</h1>
+<p>Reactividad granular: Angular sabe exactamente qué cambió y actualiza solo eso.</p>
+
+<!-- ══ signal() base ══ -->
+<section>
+  <h2>signal() — estado mutable</h2>
+  <!-- IMPORTANTE: se lee con () → es una función getter -->
+  <p>Contador: <strong>{{ contador() }}</strong></p>
+  <button (click)="decrementar()">−</button>
+  <button (click)="reset()">Reset</button>
+  <button (click)="incrementar()">+</button>
+</section>
+
+<!-- ══ computed() ══ -->
+<section>
+  <h2>computed() — derivados automáticos</h2>
+  <!-- doble, esPar, categoria son computed → solo lectura, recalculo automático -->
+  <p>El doble es: <strong>{{ doble() }}</strong></p>
+  <p>¿Es positivo? {{ esPositivo() ? 'sí' : 'no' }}</p>
+  <p>¿Es par? {{ esPar() ? 'sí' : 'no' }}</p>
+  <!-- computed encadenado: categoria lee contador + esPar -->
+  <p>Categoría: <strong>{{ categoria() }}</strong></p>
+</section>
+
+<!-- ══ historial estado inmutable ══ -->
+<section>
+  <h2>Arrays con signals — inmutabilidad</h2>
+  <!-- update() con spread crea NUEVA referencia cada vez -->
+  @if (historial().length === 0) {
+    <p><em>Sin movimientos todavía. Usa los botones.</em></p>
+  } @else {
+    <p>Movimientos: {{ historial().length }}</p>
+    <ul>
+      @for (valor of historial(); track $index) {
+        <li>Paso {{ $index + 1 }} → valor {{ valor }}</li>
+      }
+    </ul>
+  }
+</section>
+
+<section>
+  <h2>effect() — side effects reactivos</h2>
+  <p>Abre la consola del navegador (F12): cada cambio del contador
+     dispara un <code>console.log</code> desde el effect().</p>
+</section>

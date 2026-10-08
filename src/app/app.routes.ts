@@ -3,11 +3,12 @@ import { Inicio } from './features/inicio/inicio';
 import { Binding } from './features/binding/binding';
 import { ControlFlow } from './features/control-flow/control-flow';
 import { PipesDirectivas } from './features/pipes-directivas/pipes-directivas';
+import { Signals } from './features/signals/signals';
 
-// Mapa de rutas de la aplicación
 export const routes: Routes = [
-  { path: '', component: Inicio },                       // /            → Módulo 2
-  { path: 'binding', component: Binding },               // /binding     → Módulo 3
-  { path: 'control-flow', component: ControlFlow },      // /control-flow → Módulo 4
-  { path: 'pipes-directivas', component: PipesDirectivas }, // /pipes-directivas → Módulo 5
+  { path: '', component: Inicio },
+  { path: 'binding', component: Binding },
+  { path: 'control-flow', component: ControlFlow },
+  { path: 'pipes-directivas', component: PipesDirectivas },
+  { path: 'signals', component: Signals },   // Módulo 6
 ];
