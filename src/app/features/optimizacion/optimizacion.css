@@ -1,0 +1,24 @@
+.lista {
+  list-style: none;
+  padding: 0;
+  max-height: 45vh;
+  overflow: auto;
+  border: 1px solid #313244;
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.pista {
+  background: #313244;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: #f9e2af;
+}
+
+.nota {
+  margin-top: 2rem;
+  border-top: 1px solid #45475a;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}

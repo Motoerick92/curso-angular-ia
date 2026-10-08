@@ -14,6 +14,7 @@ import { RxjsDemo } from './features/rxjs-demo/rxjs-demo';
 import { Comunicacion } from './features/comunicacion/comunicacion';
 import { AsyncPipeDemo } from './features/async-pipe/async-pipe';
 import { StoreDemo } from './features/store-demo/store-demo';
+import { Optimizacion } from './features/optimizacion/optimizacion';
 
 export const routes: Routes = [
   { path: '', component: Inicio },
@@ -30,6 +31,7 @@ export const routes: Routes = [
   { path: 'comunicacion', component: Comunicacion },   // Módulo 14: comunicación
   { path: 'async-pipe', component: AsyncPipeDemo },    // Módulo 15: pipe async
   { path: 'store', component: StoreDemo },             // Módulo 16: state management
+  { path: 'optimizacion', component: Optimizacion },   // Módulo 17: OnPush
 
   // RUTA CON PARÁMETRO: :id llega como input (via withComponentInputBinding)
   // LAZY LOADING: loadComponent descarga el chunk SOLO al visitar la ruta

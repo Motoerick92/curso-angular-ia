@@ -1,0 +1,17 @@
+.item {
+  border: 1px solid #45475a;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.4rem 0;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.contador {
+  background: #313244;
+  border-radius: 4px;
+  padding: 0 6px;
+  font-size: 0.8rem;
+  color: #f9e2af;
+}

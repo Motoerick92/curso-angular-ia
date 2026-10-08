@@ -1,0 +1,34 @@
+<h1>Módulo 17 — Change detection OnPush + optimización</h1>
+
+<section>
+  <p>
+    Tick global: <strong>{{ tick() }}</strong>
+    <small>(sube cada 500ms → empuja change detection de la app)</small>
+  </p>
+  <p>Total: <strong>{{ total() }}</strong></p>
+
+  <button (click)="renombrarAleatorio()">Renombrar elemento aleatorio</button>
+
+  <p class="pista">
+    Observa los contadores de cada ítem: con OnPush, solo el ítem
+    cuyo input cambió vuelve a evaluar su template.
+  </p>
+
+  <ul class="lista">
+    <!-- track es CLAVE: sin él, Angular podría re-renderizar todo -->
+    @for (item of items(); track item.id) {
+      <app-item-pesado [dato]="item" />
+    }
+  </ul>
+</section>
+
+<section class="nota">
+  <h2>Qué optimizamos y por qué</h2>
+  <ul>
+    <li><code>ChangeDetectionStrategy.OnPush</code> en el hijo — el template
+        solo se reevalúa si cambia su input o sus propios events.</li>
+    <li><code>track item.id</code> en &#64;for — reconciliación estable de listas.</li>
+    <li><code>computed()</code> — derivaciones cacheadas en vez de cálculo en template.</li>
+    <li>Mutación inmutable — nueva referencia solo para lo que cambió.</li>
+  </ul>
+</section>
