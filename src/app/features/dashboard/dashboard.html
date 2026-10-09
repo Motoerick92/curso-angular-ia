@@ -1,60 +1,114 @@
-<h1>Proyecto Final — Mi Productividad IA</h1>
+<!-- DASHBOARD PREMIUM — Paso 4: solo reapariencia, lógica intacta -->
+<header class="mb-8">
+  <h1 class="text-3xl font-bold">
+    Hola{{ auth.usuario() ? ', ' + auth.usuario() : '' }} 👋
+  </h1>
+  <p class="text-text-muted mt-1">Tu panel de productividad con IA integrada</p>
+</header>
 
-<!-- Panel bloqueado sin login (mismo guard UX que M9) -->
 @if (!auth.logueado()) {
-  <div class="bloqueo">
-    <h2>🔒 Inicia sesión para ver tu dashboard</h2>
-    <p>Usa el login arriba a la derecha en la barra de navegación.</p>
-  </div>
+  <!-- Empty state bonito (no pantalla vacía) -->
+  <ui-card variant="elevada">
+    <div class="text-center py-10">
+      <p class="text-5xl mb-4">🔒</p>
+      <h2 class="text-xl font-semibold mb-2">Dashboard bloqueado</h2>
+      <p class="text-text-muted">
+        Inicia sesión desde el topbar (escribe tu nombre → Entrar).
+      </p>
+    </div>
+  </ui-card>
 } @else {
 
-  <!-- ── Stats band ── -->
-  <section class="stats">
-    <div class="stat"><b>{{ store.total() }}</b><span>Total</span></div>
-    <div class="stat"><b>{{ store.completadas() }}</b><span>Hechas</span></div>
-    <div class="stat"><b>{{ store.total() - store.completadas() }}</b><span>Pendientes</span></div>
-    <div class="stat"><b>{{ progreso() }}%</b><span>Progreso</span></div>
-  </section>
-
-  <!-- Barra visual de progreso -->
-  <div class="barra-fondo">
-    <div class="barra-valor" [style.width.%]="progreso()"></div>
-  </div>
-  <p class="animo">{{ estadoAnimo() }}</p>
-
-  <!-- ── Acciones rápidas ── -->
-  <section class="acciones">
-    <a routerLink="/ia-form" class="cta">🪄 Nueva tarea asistida por IA</a>
-    <button (click)="generarResumen()"
-            [disabled]="resumenCargando()"
-            [title]="ia.apiKey() ? '' : 'Configura tu API key en /ia'">
-      @if (resumenCargando()) { ⏳ Resumiendo… } @else { 🤖 Resumen del día con IA }
-    </button>
-  </section>
-
-  <!-- Tarjeta del resumen generado -->
-  @if (resumenIa(); as resumen) {
-    <div class="resumen">
-      <h3>Tu coach IA dice:</h3>
-      <p>{{ resumen }}</p>
-    </div>
-  }
-
-  <!-- ── Pendientes del store ── -->
-  <section>
-    <h2>Pendientes ({{ store.total() - store.completadas() }})</h2>
-    @if (store.total() - store.completadas() === 0) {
-      <p class="vacio">Sin pendientes 🎉 — ¡agrega más o disfruta la calma!</p>
-    } @else {
-      @for (t of store.lista(); track t.id) {
-        @if (!t.hecha) {
-          <app-tarjeta-tarea
-            [tarea]="t"
-            (hechaCambiada)="store.alternar(t.id)"
-            (eliminar)="store.eliminar(t.id)"
-          />
-        }
-      }
+  <!-- ── 4 CARDS DE ESTADÍSTICAS con icono y gradiente ── -->
+  <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    @for (s of statCards(); track s.nombre) {
+      <ui-card variant="base">
+        <div class="flex items-center gap-3">
+          <div [class]="'w-12 h-12 rounded-xl flex items-center justify-center text-2xl ' + s.gradiente">
+            {{ s.icono }}
+          </div>
+          <div>
+            <p class="text-2xl font-bold leading-none">{{ s.valor() }}</p>
+            <p class="text-xs text-text-muted uppercase tracking-wide mt-1">{{ s.nombre }}</p>
+          </div>
+        </div>
+      </ui-card>
     }
   </section>
+
+  <!-- ── GRID 2 COLUMNAS: tareas izquierda, chat/resumen IA derecha ── -->
+  <div class="grid lg:grid-cols-2 gap-6">
+
+    <!-- Columna tareas -->
+    <ui-card titulo="Tus tareas" [etiqueta]="store.completadas() + '/' + store.total() + ' hechas'">
+      <!-- Barra de progreso con gradiente -->
+      <div class="mb-4">
+        <div class="flex justify-between text-xs text-text-muted mb-1">
+          <span>Progreso</span>
+          <span>{{ progreso() }}%</span>
+        </div>
+        <div class="h-2.5 rounded-full bg-bg-panel overflow-hidden">
+          <div class="h-full rounded-full bg-(image:--gradient-brand) transition-all duration-500"
+               [style.width.%]="progreso()"></div>
+        </div>
+        <p class="text-sm text-text-muted mt-1">{{ estadoAnimo() }}</p>
+      </div>
+
+      <a routerLink="/ia-form"
+         class="inline-flex items-center gap-2 text-sm font-medium text-accent-soft
+                hover:text-accent transition-colors mb-4">
+        🪄 Crear tarea asistida por IA →
+      </a>
+
+      <!-- Empty state si no hay pendientes -->
+      @if (store.total() - store.completadas() === 0) {
+        <div class="text-center py-8 text-text-muted">
+          <p class="text-4xl mb-2">🎉</p>
+          <p>Sin pendientes. Disfruta la calma.</p>
+        </div>
+      } @else {
+        <div class="space-y-2">
+          @for (t of store.lista(); track t.id) {
+            @if (!t.hecha) {
+              <app-tarjeta-tarea
+                [tarea]="t"
+                (hechaCambiada)="store.alternar(t.id)"
+                (eliminar)="store.eliminar(t.id)"
+              />
+            }
+          }
+        </div>
+      }
+    </ui-card>
+
+    <!-- Columna IA coach -->
+    <ui-card titulo="Coach IA" etiqueta="Apodex 1.1 Mini" variant="elevada">
+      <p class="text-sm text-text-muted mb-4">
+        Analiza tus tareas y te da un resumen + un tip accionable.
+      </p>
+
+      <ui-button variant="primary"
+                 [loading]="resumenCargando()"
+                 (click)="generarResumen()">
+        🤖 Generar resumen del día
+      </ui-button>
+
+      <!-- Skeleton mientras la IA piensa -->
+      @if (resumenCargando()) {
+        <div class="mt-4"><ui-skeleton forma="texto" [lineas]="4" /></div>
+      }
+
+      <!-- Resultado del coach -->
+      @if (resumenIa(); as r) {
+        <div class="mt-4 rounded-lg border border-border bg-bg-panel p-4 text-sm
+                    whitespace-pre-line leading-relaxed">
+          {{ r }}
+        </div>
+      }
+
+      <a routerLink="/ia" class="inline-block mt-4 text-sm text-primary-soft hover:text-accent-soft transition-colors">
+        Abrir chat completo →
+      </a>
+    </ui-card>
+  </div>
 }

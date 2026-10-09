@@ -1,12 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 // Title / Meta: servicios DOM del framework para SEO
 import { Title, Meta } from '@angular/platform-browser';
+// Piezas del design system (M25)
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiButton } from '../../shared/components/ui/ui-button';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // @Component: decorador que convierte esta clase TS en un componente Angular.
 // En Angular 22 TODO es standalone por defecto → no existe NgModule.
 @Component({
   selector: 'app-inicio',        // etiqueta HTML para usarlo: <app-inicio />
-  imports: [],                   // dependencias que este componente usa (componentes, pipes...)
+  imports: [UiCard, UiButton, UiBadge, RouterLink], // dependencias que este componente usa
   templateUrl: './inicio.html',  // archivo de vista (HTML)
   styleUrl: './inicio.css',      // estilos encapsulados: solo afectan a este componente
 })
@@ -14,7 +19,9 @@ export class Inicio {
   // Propiedades públicas → visibles desde el template vía interpolación {{ }}
   titulo = 'Curso Angular 22 + IA';
   moduloActual = 2;
-  completado = false;
+  // M25 fix zoneless: estado como signal — sin Zone.js una propiedad
+  // plana NO dispara change detection si la mutas imperativamente
+  completado = signal(false);
 
   // Getter: propiedad derivada, se recalcula en cada ciclo de change detection
   get progreso(): string {
@@ -28,7 +35,7 @@ export class Inicio {
 
   // Método que muta estado: Angular detecta el cambio y actualiza la vista solo
   alternarCompletado(): void {
-    this.completado = !this.completado;
+    this.completado.update((v) => !v);
   }
 
   // SEO por ruta: cada página setea su título y meta tags.

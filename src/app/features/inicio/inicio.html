@@ -1,21 +1,53 @@
-<!-- INTERPOLACIÓN {{ expresión }}: Angular evalúa la expresión TS y pinta el resultado -->
+<!-- HERO premium del curso -->
+<div class="text-center py-14">
+  <ui-badge tonalidad="acento" class="mb-4">Curso completo · 24 módulos</ui-badge>
 
-<!-- 1) Propiedad simple de la clase -->
-<h1>{{ titulo }}</h1>
+  <h1 class="text-5xl font-extrabold leading-tight bg-(image:--gradient-brand) bg-clip-text text-transparent">
+    {{ titulo }}
+  </h1>
 
-<!-- 2) Getter (se comporta como propiedad calculada) -->
-<p>{{ progreso }}</p>
+  <p class="mt-4 text-lg text-text-muted max-w-2xl mx-auto">
+    {{ saludar() }} — Angular 22 standalone, signals, control flow moderno
+    y chat IA con streaming. {{ progreso }}.
+  </p>
 
-<!-- 3) Llamada a método de la clase -->
-<p>{{ saludar() }}</p>
+  <div class="mt-8 flex justify-center gap-3">
+    <ui-button variant="primary" (click)="alternarCompletado()">
+      {{ completado() ? '✓ Módulo aprendido' : 'Marcar como aprendido' }}
+    </ui-button>
+    <a routerLink="/dashboard"
+       class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium
+              bg-bg-panel text-text border border-border transition-all duration-200
+              hover:border-primary hover:text-white">
+      Ver dashboard 🏆
+    </a>
+  </div>
+</div>
 
-<!-- 4) Operador ternario dentro de la interpolación -->
-<p>Estado: {{ completado ? 'COMPLETADO ✅' : 'en curso...' }}</p>
+<!-- Feature cards con el design system -->
+<div class="grid md:grid-cols-3 gap-4 mt-6">
+  <ui-card titulo="State moderno" etiqueta="M6">
+    <p class="text-sm text-text-muted">
+      Signals, computed y effect: reactividad granular sin Zone.js.
+    </p>
+  </ui-card>
 
-<!-- 5) Operador de navegación segura ?. — evita crash si el objeto es null/undefined -->
-<!-- <p>Alumno: {{ alumno?.nombre }}</p> -->
+  <ui-card titulo="Store desnormalizado" etiqueta="M16">
+    <p class="text-sm text-text-muted">
+      Entidades + orden + filtros reactivos. Escalable sin librerías.
+    </p>
+  </ui-card>
 
-<!-- Avance de Módulo 3: event binding (click) → ejecuta método de la clase -->
-<button (click)="alternarCompletado()">
-  {{ completado ? 'Desmarcar' : 'Marcar completado' }}
-</button>
+  <ui-card titulo="IA integrada" etiqueta="M21-23">
+    <p class="text-sm text-text-muted">
+      Chat streaming SSE y generación de contenido en formularios.
+    </p>
+  </ui-card>
+</div>
+
+<!-- Estado del ejercicio M2 -->
+@if (completado()) {
+  <ui-card variant="elevada" class="mt-6">
+    <p class="text-emerald-300">✅ Ejercicio marcado como completado. ¡A tu ritmo!</p>
+  </ui-card>
+}

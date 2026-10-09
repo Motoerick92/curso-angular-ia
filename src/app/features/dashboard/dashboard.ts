@@ -5,6 +5,9 @@ import { TareasStore } from '../../core/store/tareas-store';
 import { IaService } from '../../core/services/ia';
 import { Auth } from '../../core/services/auth';
 import { TarjetaTarea } from '../io/tarjeta-tarea/tarjeta-tarea';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiButton } from '../../shared/components/ui/ui-button';
+import { UiSkeleton } from '../../shared/components/ui/ui-skeleton';
 
 // ═══════════════════════════════════════════════════════════════
 // PROYECTO FINAL — Dashboard "Mi Productividad IA".
@@ -17,7 +20,7 @@ import { TarjetaTarea } from '../io/tarjeta-tarea/tarjeta-tarea';
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, TarjetaTarea],
+  imports: [RouterLink, TarjetaTarea, UiCard, UiButton, UiSkeleton],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
@@ -28,6 +31,34 @@ export class Dashboard {
 
   resumenIa = signal<string | null>(null);
   resumenCargando = signal(false);
+
+  // Tarjetas de estadísticas: cada una con icono y gradiente Tailwind propio
+  readonly statCards = computed(() => [
+    {
+      nombre: 'Total',
+      valor: () => this.store.total(),
+      icono: '📋',
+      gradiente: 'bg-primary/20 text-primary-soft',
+    },
+    {
+      nombre: 'Hechas',
+      valor: () => this.store.completadas(),
+      icono: '✅',
+      gradiente: 'bg-emerald-500/20 text-emerald-300',
+    },
+    {
+      nombre: 'Pendientes',
+      valor: () => this.store.total() - this.store.completadas(),
+      icono: '⏳',
+      gradiente: 'bg-amber-500/20 text-amber-300',
+    },
+    {
+      nombre: 'Progreso',
+      valor: () => this.progreso() + '%',
+      icono: '📈',
+      gradiente: 'bg-accent/20 text-accent-soft',
+    },
+  ]);
 
   // Progreso % derivado: 0-100, muestra skill de compute sobre observables locales
   readonly progreso = computed(() => {

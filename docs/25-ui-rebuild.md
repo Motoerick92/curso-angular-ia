@@ -85,6 +85,41 @@ Uso:
 | `@import` warning | Fonts import debajo de tailwind | Imports primero siempre |
 | UI en blanco/negro antes | No existía Tailwind ni tema | Paso 0 + 1 completos |
 
+## PASO 3 — Layout premium (app.ts/html/css)
+- Sidebar: gradiente slate, iconos emoji, activo con `bg-primary` + sombra
+- Topbar: sticky + `backdrop-blur`, buscador RxJS (patrón M13) que filtra el sidebar,
+  avatar con gradiente e inicial del usuario
+- Main: `max-w-7xl` centrado sobre gradientes radiales
+- Lista de 21 módulos reactiva: `computed()` filtra por el texto del buscador
+
+## PASO 4 — Rebuild de features sin tocar lógica
+- **Dashboard**: 4 stat-cards con gradiente, barra de progreso animada, grid 2 columnas
+  (tareas | coach IA), skeleton durante resumen, empty state con emoji 🔒
+- **Inicio**: hero con texto degradado (`bg-clip-text text-transparent`),
+  badge superior, CTA primary + secondary, 3 feature cards
+
+### BUG REAL capturado (valioso): zoneless vs propiedades planas
+```ts
+// ANTES (M2, pre-zoneless):
+completado = false;
+alternarCompletado() { this.completado = !this.completado; }
+```
+Síntoma: en tests (y con estado imperativo fuera de eventos), el cambio
+NO se refleja en el DOM. Angular 22 es **zoneless**: solo re-renderiza con
+signals, eventos o marcado manual.
+
+Fix idiomático:
+```ts
+completado = signal(false);
+alternarCompletado() { this.completado.update((v) => !v); }
+```
+Y en template: `{{ completado() }}` / `@if (completado())`.
+
+Lección para el curso: en zoneless, **todo estado reactivo debe ser signal**.
+El compilador de templates no falla con props planas — pero la app deja de
+ser reactiva silenciosamente. Este bug apareció en los tests porque allí
+llamamos el método imperativamente sin un evento DOM que dispare CD.
+
 ## Siguiente (al decir "siguiente")
 - ui-button, ui-badge, ui-input, ui-skeleton
 - Rebuild layout principal (sidebar, topbar)
