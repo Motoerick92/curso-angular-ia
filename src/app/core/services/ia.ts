@@ -16,7 +16,7 @@ export interface MensajeIa {
 export class IaService {
   // ── Configuración editable en runtime (defaults: OpenRouter gratis) ──
   readonly baseUrl = signal('https://openrouter.ai/api/v1');
-  readonly modelo = signal('google/gemini-2.0-flash-exp:free');
+  readonly modelo = signal('apodex/apodex-1.1-mini:free');
 
   // SSR: localStorage solo existe en navegador. En server → cadena vacía.
   private readonly esNavegador = isPlatformBrowser(inject(PLATFORM_ID));
