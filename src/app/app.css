@@ -1,23 +1,2 @@
-/* Shell de la app */
-nav {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  background: #1e1e2e;
-}
-
-nav a {
-  color: #cdd6f4;
-  text-decoration: none;
-}
-
-/* routerLinkActive agrega esta clase cuando la ruta está activa */
-nav a.activo {
-  color: #89b4fa;
-  font-weight: bold;
-  border-bottom: 2px solid #89b4fa;
-}
-
-nav .spacer {
-  flex: 1;
-}
+/* El layout nuevo vive 100% en clases Tailwind (app.html).
+   Dejamos este archivo vacío a propósito: el host no necesita estilos. */
