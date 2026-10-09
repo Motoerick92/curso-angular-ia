@@ -1,4 +1,28 @@
-<h1>Zona Admin 🔒</h1>
-<p>Solo visible si estás logueado. El <code>authGuard</code> bloquea el resto.</p>
-<p>Usuario actual: <strong>{{ auth.usuario() }}</strong></p>
-<button (click)="auth.logOut()">Cerrar sesión</button>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🔒 Zona Admin</h1>
+  <p class="text-text-muted mt-1">Solo visible si estás logueado. El authGuard bloquea el resto.</p>
+</header>
+
+<ui-card variant="elevada">
+  <div class="flex items-center gap-3 mb-4">
+    <div class="w-12 h-12 rounded-full bg-(image:--gradient-brand) flex items-center justify-center
+                text-white text-xl font-bold">
+      {{ auth.usuario()?.charAt(0).toUpperCase() }}
+    </div>
+    <div>
+      <p class="font-semibold">{{ auth.usuario() }}</p>
+      <ui-badge tonalidad="exito">Sesión activa</ui-badge>
+    </div>
+  </div>
+
+  <p class="text-sm text-text-muted mb-4">
+    Llegaste porque <code class="text-accent-soft">authGuard</code> te dejó pasar.
+    Este componente se cargó por lazy loading (chunk separado).
+  </p>
+
+  <button (click)="auth.logOut()"
+          class="rounded-md bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-2 text-sm
+                 font-medium hover:bg-red-500/30 transition-colors">
+    Cerrar sesión
+  </button>
+</ui-card>

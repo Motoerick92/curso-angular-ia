@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { JsonPipe } from '@angular/common';
+import { UiCard } from '../../shared/components/ui/ui-card';
 import {
   AbstractControl,
   FormBuilder,
@@ -33,7 +34,7 @@ function edadMinima(minima: number) {
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-form-reactivo',
-  imports: [ReactiveFormsModule, JsonPipe],
+  imports: [ReactiveFormsModule, JsonPipe, UiCard],
   templateUrl: './form-reactivo.html',
   styleUrl: './form-reactivo.css',
 })

@@ -1,6 +1,8 @@
 import { Component, inject, viewChild } from '@angular/core';
 import { Puente } from '../../core/services/puente';
 import { ContadorHijo } from './contador-hijo/contador-hijo';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // ═══════════════════════════════════════════════════════════════
 // PADRE que muestra 3 formas de comunicación:
@@ -10,7 +12,7 @@ import { ContadorHijo } from './contador-hijo/contador-hijo';
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-comunicacion',
-  imports: [ContadorHijo],
+  imports: [ContadorHijo, UiCard, UiBadge],
   templateUrl: './comunicacion.html',
   styleUrl: './comunicacion.css',
 })

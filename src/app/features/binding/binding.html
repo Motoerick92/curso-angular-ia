@@ -1,33 +1,53 @@
-<h1>Módulo 3 — Data Binding</h1>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🔗 Data Binding</h1>
+  <p class="text-text-muted mt-1">
+    Los 4 modos de comunicar clase ↔ template.
+  </p>
+</header>
 
-<!-- ══ 1. INTERPOLACIÓN: clase → template (texto) ══ -->
-<p>Alumno: {{ nombre() }}</p>
+<div class="space-y-4">
+  <!-- 1. Interpolación -->
+  <ui-card titulo="1. Interpolación" etiqueta="{{ nombre() }}">
+    <p>Alumno: <strong class="text-accent-soft">{{ nombre() }}</strong></p>
+  </ui-card>
 
-<!-- ══ 2. PROPERTY BINDING [propiedad]="expresión": clase → template ══ -->
-<!-- Enlaza una PROPIEDAD del DOM con un valor TS -->
-<input [value]="nombre()" [disabled]="botonDeshabilitado()" />
+  <!-- 2. Property binding -->
+  <ui-card titulo="2. Property binding" etiqueta="[prop]">
+    <div class="space-y-3">
+      <input [value]="nombre()" [disabled]="botonDeshabilitado()"
+             class="w-full max-w-md rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                    text-text disabled:opacity-40 transition-all" />
+      <img [src]="urlImagen()" alt="Logo Angular" width="80" class="rounded-lg" />
+    </div>
+  </ui-card>
 
-<!-- Property binding en imagen: [src] apunta al signal -->
-<img [src]="urlImagen()" alt="Logo Angular" width="80" />
+  <!-- 3. Event binding -->
+  <ui-card titulo="3. Event binding" etiqueta="(click)">
+    <div class="flex items-center gap-3 flex-wrap">
+      <button (click)="contarClic()" [disabled]="botonDeshabilitado()"
+              class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                     transition-all duration-200 active:scale-95 disabled:opacity-40 shadow-(--shadow)">
+        Clic aquí
+      </button>
+      <ui-badge tonalidad="primario">Clics: {{ clics() }}</ui-badge>
+      <button (click)="alternarBoton()"
+              class="rounded-md bg-bg-panel border border-border px-3 py-2 text-sm
+                     text-text-muted hover:text-text transition-colors">
+        {{ botonDeshabilitado() ? 'Habilitar' : 'Deshabilitar' }} botón
+      </button>
+    </div>
+  </ui-card>
 
-<!-- ══ 3. EVENT BINDING (evento)="método()": template → clase ══ -->
-<!-- Angular escucha el evento DOM y ejecuta el método de la clase -->
-<button (click)="contarClic()" [disabled]="botonDeshabilitado()">
-  Clic aquí
-</button>
-<p>Clics registrados: {{ clics() }}</p>
-
-<button (click)="alternarBoton()">
-  {{ botonDeshabilitado() ? 'Habilitar' : 'Deshabilitar' }} botón de clics
-</button>
-
-<!-- ══ 4. TWO-WAY BINDING [(ngModel)]: bidireccional ══ -->
-<!-- Editar el input actualiza el signal; cambiar el signal actualiza el input -->
-<label>
-  Editar nombre (two-way):
-  <input [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" />
-</label>
-<p>
-  El nombre ahora vale: <strong>{{ nombre() }}</strong>
-  — fíjate que se actualiza en TODOS lados al mismo tiempo
-</p>
+  <!-- 4. Two-way binding -->
+  <ui-card titulo="4. Two-way binding" etiqueta="[(ngModel)]">
+    <label class="block max-w-md">
+      <span class="text-sm text-text-muted">Editar nombre (two-way):</span>
+      <input [ngModel]="nombre()" (ngModelChange)="nombre.set($event)"
+             class="mt-1 w-full rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                    text-text focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"/>
+    </label>
+    <p class="mt-3 text-sm text-text-muted">
+      Se actualiza en TODOS lados: <strong class="text-accent-soft">{{ nombre() }}</strong>
+    </p>
+  </ui-card>
+</div>

@@ -1,13 +1,30 @@
-<!-- Detalle de UNA tarea: id viene de la URL -->
+<!-- Detalle premium de una tarea: id de la URL -->
 @if (tarea(); as t) {
-  <h1>Tarea #{{ t.id }}</h1>
-  <p><strong>{{ t.titulo }}</strong></p>
-  <p>Prioridad: {{ t.prioridad }}</p>
-  <p>Estado: {{ t.hecha ? '✅ Completada' : '⏳ Pendiente' }}</p>
-} @else {
-  <!-- Id inválido o tarea eliminada -->
-  <h1>Tarea no encontrada</h1>
-  <p>El id <strong>{{ id() }}</strong> no existe en la lista.</p>
-}
+  <ui-card [titulo]="'Tarea #' + t.id" [etiqueta]="t.prioridad">
+    <h2 class="text-xl font-semibold mb-2">{{ t.titulo }}</h2>
 
-<a routerLink="/servicios">← Volver a la lista</a>
+    <div class="flex gap-2 mb-4">
+      <ui-badge [tonalidad]="t.hecha ? 'exito' : 'alerta'">
+        {{ t.hecha ? 'Completada' : 'Pendiente' }}
+      </ui-badge>
+      <ui-badge tonalidad="primario">prioridad: {{ t.prioridad }}</ui-badge>
+    </div>
+
+    <a routerLink="/servicios"
+       class="text-sm text-primary-soft hover:text-accent-soft transition-colors">
+      ← Volver a la lista
+    </a>
+  </ui-card>
+} @else {
+  <!-- Empty state: id inválido o tarea borrada -->
+  <ui-card variant="elevada">
+    <div class="text-center py-8 text-text-muted">
+      <p class="text-4xl mb-2">🔎</p>
+      <p class="font-semibold mb-1">Tarea no encontrada</p>
+      <p class="text-sm">El id <code class="text-accent-soft">{{ id() }}</code> no existe.</p>
+      <a routerLink="/servicios" class="mt-4 inline-block text-sm text-primary-soft">
+        ← Volver a la lista
+      </a>
+    </div>
+  </ui-card>
+}

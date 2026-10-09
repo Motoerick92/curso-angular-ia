@@ -1,4 +1,6 @@
 import { Component, computed, effect, signal } from '@angular/core';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // ═══════════════════════════════════════════════════════════
 // SIGNALS: sistema de reactividad reactiva granular de Angular.
@@ -6,7 +8,7 @@ import { Component, computed, effect, signal } from '@angular/core';
 // ═══════════════════════════════════════════════════════════
 @Component({
   selector: 'app-signals',
-  imports: [],
+  imports: [UiCard, UiBadge],
   templateUrl: './signals.html',
   styleUrl: './signals.css',
 })

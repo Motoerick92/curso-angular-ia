@@ -5,6 +5,8 @@ import { CurrencyPipe, DatePipe, JsonPipe, SlicePipe, TitleCasePipe, UpperCasePi
 import { NgClass, NgStyle } from '@angular/common';
 import { TruncatePipe } from '../../shared/pipes/truncate-pipe';
 import { Resaltar } from '../../shared/directives/resaltar';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 @Component({
   selector: 'app-pipes-directivas',
@@ -16,6 +18,8 @@ import { Resaltar } from '../../shared/directives/resaltar';
     NgClass, NgStyle,
     // Nuestros customs
     TruncatePipe, Resaltar,
+    // UI kit (M25)
+    UiCard, UiBadge,
   ],
   templateUrl: './pipes-directivas.html',
   styleUrl: './pipes-directivas.css',

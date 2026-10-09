@@ -1,87 +1,106 @@
-<h1>Módulo 21/22 — Chat IA (con streaming)</h1>
-<p>
-  Chat contra cualquier API compatible con OpenAI. Por defecto:
-  <strong>OpenRouter</strong> con modelo gratuito
-  <code>llama-3.2-3b-instruct:free</code>.
-</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🤖 Chat IA — streaming</h1>
+  <p class="text-text-muted mt-1">
+    API OpenAI-compatible con SSE token a token. OpenRouter + Apodex free.
+  </p>
+</header>
 
-<!-- ── Panel de configuración: key + endpoint + modelo ── -->
-<details class="config">
-  <summary>⚙ Configuración (click para expandir)</summary>
+<div class="grid lg:grid-cols-3 gap-6">
+  <!-- Config -->
+  <ui-card titulo="Configuración" etiqueta="OpenRouter" class="lg:col-span-1 h-fit">
+    <label class="block text-sm mb-3">
+      <span class="text-text-muted">API key (localStorage, solo tu navegador)</span>
+      <input type="password" [(ngModel)]="textoApiKey"
+             [placeholder]="ia.apiKey() ? '••••••• (guardada)' : 'sk-or-v1-…'"
+             class="mt-1 w-full rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                    text-text placeholder:text-text-faint
+                    focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"/>
+    </label>
 
-  <label>
-    API key (se guarda en localStorage, solo tu navegador):
-    <input type="password"
-           [(ngModel)]="textoApiKey"
-           [placeholder]="ia.apiKey() ? '••••••• (guardada)' : 'sk-or-v1-...'" />
-  </label>
+    <label class="block text-sm mb-3">
+      <span class="text-text-muted">Modelo</span>
+      <input type="text" [(ngModel)]="textoModelo"
+             class="mt-1 w-full rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                    text-text focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"/>
+    </label>
 
-  <label>
-    Modelo:
-    <input type="text" [(ngModel)]="textoModelo" />
-  </label>
+    <label class="flex items-center gap-2 text-sm mb-4">
+      <input type="checkbox" [checked]="ia.streaming()"
+             (change)="ia.streaming.set(!ia.streaming())" class="accent-fuchsia-500"/>
+      Streaming (token a token)
+    </label>
 
-  <button (click)="guardarConfig()">Guardar configuración</button>
+    <button (click)="guardarConfig()"
+            class="w-full rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                   transition-all duration-200 hover:-translate-y-0.5 shadow-(--shadow)">
+      Guardar configuración
+    </button>
 
-  <!-- M22: toggle de modo streaming -->
-  <label class="toggle">
-    <input type="checkbox"
-           [checked]="ia.streaming()"
-           (change)="ia.streaming.set(!ia.streaming())" />
-    Streaming (token a token)
-  </label>
+    @if (ia.apiKey()) { <ui-badge tonalidad="exito" class="mt-3">✓ Key configurada</ui-badge> }
+    @else { <p class="mt-3 text-xs text-text-faint">Sin key — crea una en https://openrouter.ai</p> }
+  </ui-card>
 
-  @if (ia.apiKey()) {
-    <small class="ok">✓ Key configurada</small>
-  } @else {
-    <small class="error">
-      Sin key — crea una gratis en https://openrouter.ai y pégala aquí.
-    </small>
-  }
-</details>
+  <!-- Chat -->
+  <ui-card titulo="Chat" [etiqueta]="ia.streaming() ? 'SSE streaming' : 'stream off'"
+           class="lg:col-span-2">
+    <!-- Historial -->
+    <div class="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
+      @if (ia.historial().length === 0) {
+        <div class="text-center py-10 text-text-muted">
+          <p class="text-4xl mb-2">💬</p>
+          <p class="text-sm">Sin mensajes. Configura la key y pregunta algo.</p>
+        </div>
+      } @else {
+        @for (m of ia.historial(); track $index) {
+          <div class="flex" [class.justify-end]="m.rol === 'user'">
+            <div class="max-w-[80%] rounded-xl px-3.5 py-2 text-sm"
+                 [class.bg-primary/20]="m.rol === 'user'"
+                 [class.bg-bg-panel]="m.rol === 'assistant'"
+                 [class.border]="m.rol === 'assistant'"
+                 [class.border-border]="m.rol === 'assistant'">
+              <p class="text-[11px] font-semibold mb-0.5"
+                 [class.text-primary-soft]="m.rol === 'user'"
+                 [class.text-text-faint]="m.rol === 'assistant'">
+                {{ m.rol === 'user' ? 'Tú' : 'IA' }}
+              </p>
+              <p class="whitespace-pre-wrap">{{ m.contenido }}</p>
+            </div>
+          </div>
+        }
+      }
 
-<!-- ── Error global de la última request ── -->
-@let errorMsg = ia.error();
-@if (errorMsg) {
-  <div class="error-bar">❌ {{ errorMsg }}</div>
-}
+      @if (ia.cargando()) {
+        <ui-skeleton forma="texto" [lineas]="3" />
+      }
+    </div>
 
-<!-- ── Historial del chat ── -->
-<div class="chat">
-  @if (ia.historial().length === 0) {
-    <p class="vacio">
-      💬 Todavía no hay mensajes. Configura la key arriba y pregunta algo.
-    </p>
-  } @else {
-    @for (m of ia.historial(); track $index) {
-      <!-- Burbujas distintas según el rol -->
-      <div class="burbuja" [class.usuario]="m.rol === 'user'"
-                            [class.asistente]="m.rol === 'assistant'">
-        <span class="rol">{{ m.rol === 'user' ? 'Tú' : 'IA' }}</span>
-        <p>{{ m.contenido }}</p>
+    <!-- Error -->
+    @let err = ia.error();
+    @if (err) {
+      <div class="mt-3 rounded-md bg-red-500/10 border border-red-500/30 px-3 py-2 text-sm text-red-300">
+        ❌ {{ err }}
       </div>
     }
-  }
 
-  <!-- Indicador mientras espera la respuesta -->
-  @if (ia.cargando()) {
-    <div class="burbuja asistente cargando">
-      <span class="rol">IA</span>
-      <p>escribiendo…</p>
+    <!-- Input -->
+    <div class="mt-4 flex gap-2">
+      <input #caja type="text" placeholder="Escribe y presiona Enter…"
+             [disabled]="ia.cargando() || !ia.apiKey()"
+             (keyup.enter)="enviar(caja.value, caja)"
+             class="flex-1 rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                    text-text placeholder:text-text-faint disabled:opacity-40
+                    focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"/>
+      <button [disabled]="ia.cargando() || !ia.apiKey()"
+              (click)="enviar(caja.value, caja)"
+              class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                     disabled:opacity-40 transition-all hover:-translate-y-0.5 shadow-(--shadow)">
+        Enviar
+      </button>
+      <button (click)="ia.limpiar()"
+              class="rounded-md bg-bg-panel border border-border px-3 py-2 text-sm
+                     text-text-muted hover:text-text transition-colors">
+        Limpiar
+      </button>
     </div>
-  }
-</div>
-
-<!-- ── Input de chat ── -->
-<div class="input-chat">
-  <input #caja
-         type="text"
-         placeholder="Escribe y presiona Enter…"
-         [disabled]="ia.cargando() || !ia.apiKey()"
-         (keyup.enter)="enviar(caja.value, caja)" />
-  <button [disabled]="ia.cargando() || !ia.apiKey()"
-          (click)="enviar(caja.value, caja)">
-    Enviar
-  </button>
-  <button (click)="ia.limpiar()">Limpiar chat</button>
+  </ui-card>
 </div>

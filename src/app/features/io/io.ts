@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { TarjetaTarea, type Tarea } from './tarjeta-tarea/tarjeta-tarea';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // ═══════════════════════════════════════════════════════════════
 // COMPONENTE PADRE: dueño del estado. Envía datos al hijo con
@@ -8,7 +9,7 @@ import { TarjetaTarea, type Tarea } from './tarjeta-tarea/tarjeta-tarea';
 @Component({
   selector: 'app-io',
   // Importar el hijo para usarlo como etiqueta en el template
-  imports: [TarjetaTarea],
+  imports: [TarjetaTarea, UiBadge],
   templateUrl: './io.html',
   styleUrl: './io.css',
 })

@@ -2,11 +2,13 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Repetir } from '../../shared/directives/repetir';
 import { SiRol } from '../../shared/directives/si-rol';
 import { Auth } from '../../core/services/auth';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // Componente que DEMASUESTRA las directivas estructurales custom.
 @Component({
   selector: 'app-directivas-custom',
-  imports: [Repetir, SiRol],
+  imports: [Repetir, SiRol, UiCard, UiBadge],
   templateUrl: './directivas-custom.html',
   styleUrl: './directivas-custom.css',
 })

@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
+import { UiCard } from '../../shared/components/ui/ui-card';
 
 // Datos del formulario: un simple objeto (no signals por campo,
 // porque ngModel muta el objeto directamente)
@@ -19,7 +20,7 @@ interface FormularioContacto {
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-form-template',
-  imports: [FormsModule, JsonPipe],   // FormsModule = obligatorio para ngModel/ngForm
+  imports: [FormsModule, JsonPipe, UiCard],   // FormsModule = obligatorio para ngModel/ngForm
   templateUrl: './form-template.html',
   styleUrl: './form-template.css',
 })

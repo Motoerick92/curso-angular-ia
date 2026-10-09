@@ -1,11 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IaService } from '../../core/services/ia';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
+import { UiSkeleton } from '../../shared/components/ui/ui-skeleton';
 
 // UI del chat: todo el estado vive en el servicio; esto solo lo pinta.
 @Component({
   selector: 'app-ia',
-  imports: [FormsModule],
+  imports: [FormsModule, UiCard, UiBadge, UiSkeleton],
   templateUrl: './ia.html',
   styleUrl: './ia.css',
 })

@@ -1,34 +1,44 @@
-<h1>Módulo 7 — Inputs / Outputs / Model</h1>
-<p>El padre tiene el estado. El hijo recibe datos y emite eventos. Así funciona la comunicación.</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">📦 Inputs / Outputs / Model</h1>
+  <p class="text-text-muted mt-1">
+    Padre dueño del estado. Hijo recibe datos y emite eventos.
+  </p>
+</header>
 
-<!-- Estadística del padre — se actualiza cuando el hijo emite cambios -->
-<p>
-  Completadas: <strong>{{ completadas() }} de {{ tareas().length }}</strong> |
-  Seleccionadas: <strong>{{ idsSeleccionados().length }}</strong>
-</p>
+<!-- Stats del padre -->
+<div class="flex gap-3 mb-5">
+  <ui-badge tonalidad="primario">Total: {{ tareas().length }}</ui-badge>
+  <ui-badge tonalidad="exito">Hechas: {{ completadas() }}</ui-badge>
+  <ui-badge tonalidad="acento">Seleccionadas: {{ idsSeleccionados().length }}</ui-badge>
+</div>
 
+<!-- Lista de tarjetas hijas -->
 @if (tareas().length === 0) {
-  <p><em>Todas las tareas eliminadas. Recarga para volver a empezar.</em></p>
+  <div class="rounded-xl border border-dashed border-border bg-bg-card p-8 text-center text-text-muted">
+    <p class="text-3xl mb-2">🗑️</p>
+    <p>Todas eliminadas. Recarga para volver a empezar.</p>
+  </div>
 } @else {
-  <!-- @for apunta al signal; Angular repinta solo lo necesario -->
-  @for (tarea of tareas(); track tarea.id) {
-    <app-tarjeta-tarea
-      [tarea]="tarea"
-      [mostrarBotones]="true"
-      [seleccionada]="idsSeleccionados().includes(tarea.id)"
-      (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
-      (eliminar)="alEliminar($event)"
-      (seleccionadaChange)="alAlternarSeleccion(tarea.id, $event)"
-    />
-  }
+  <div class="space-y-2 max-w-2xl">
+    @for (tarea of tareas(); track tarea.id) {
+      <app-tarjeta-tarea
+        [tarea]="tarea"
+        [mostrarBotones]="true"
+        [seleccionada]="idsSeleccionados().includes(tarea.id)"
+        (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
+        (eliminar)="alEliminar($event)"
+        (seleccionadaChange)="alAlternarSeleccion(tarea.id, $event)"
+      />
+    }
+  </div>
 }
 
-<!-- Leyenda para entender qué sintaxis hace qué -->
-<section class="leyenda">
-  <h2>Clave de sintaxis</h2>
-  <ul>
-    <li><code>[tarea]="..."</code> → envía datos AL hijo (input)</li>
-    <li><code>(hechaCambiada)="..."</code> → escucha eventos DEL hijo (output)</li>
-    <li><code>[(seleccionada)]="..."</code> → two-way binding con model()</li>
+<!-- Leyenda de sintaxis -->
+<details class="mt-8 rounded-xl border border-border bg-bg-card">
+  <summary class="px-5 py-3 cursor-pointer text-sm text-text-muted hover:text-text">🔑 Sintaxis clave</summary>
+  <ul class="px-5 pb-5 text-sm text-text-muted space-y-2">
+    <li><code class="text-primary-soft">[tarea]="..."</code> → datos AL hijo (input)</li>
+    <li><code class="text-primary-soft">(hechaCambiada)="..."</code> → evento DEL hijo (output)</li>
+    <li><code class="text-primary-soft">[(seleccionada)]="..."</code> → two-way con model()</li>
   </ul>
-</section>
+</details>

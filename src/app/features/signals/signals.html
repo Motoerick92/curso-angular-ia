@@ -1,45 +1,76 @@
-<h1>Módulo 6 — Signals</h1>
-<p>Reactividad granular: Angular sabe exactamente qué cambió y actualiza solo eso.</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">⚡ Signals</h1>
+  <p class="text-text-muted mt-1">
+    signal() + computed() + effect() — reactividad granular.
+  </p>
+</header>
 
-<!-- ══ signal() base ══ -->
-<section>
-  <h2>signal() — estado mutable</h2>
-  <!-- IMPORTANTE: se lee con () → es una función getter -->
-  <p>Contador: <strong>{{ contador() }}</strong></p>
-  <button (click)="decrementar()">−</button>
-  <button (click)="reset()">Reset</button>
-  <button (click)="incrementar()">+</button>
-</section>
+<div class="grid md:grid-cols-2 gap-5">
+  <!-- Contador base -->
+  <ui-card titulo="signal() — estado mutable">
+    <p class="text-4xl font-bold text-primary-soft mb-4">{{ contador() }}</p>
+    <div class="flex gap-2">
+      <button (click)="decrementar()"
+              class="rounded-md bg-bg-panel border border-border px-4 py-2
+                     text-text hover:text-white transition-colors">−</button>
+      <button (click)="reset()"
+              class="rounded-md bg-bg-panel border border-border px-4 py-2 text-sm
+                     text-text-muted hover:text-text transition-colors">Reset</button>
+      <button (click)="incrementar()"
+              class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-white font-medium
+                     transition-all duration-200 active:scale-95 shadow-(--shadow)">+</button>
+    </div>
+  </ui-card>
 
-<!-- ══ computed() ══ -->
-<section>
-  <h2>computed() — derivados automáticos</h2>
-  <!-- doble, esPar, categoria son computed → solo lectura, recalculo automático -->
-  <p>El doble es: <strong>{{ doble() }}</strong></p>
-  <p>¿Es positivo? {{ esPositivo() ? 'sí' : 'no' }}</p>
-  <p>¿Es par? {{ esPar() ? 'sí' : 'no' }}</p>
-  <!-- computed encadenado: categoria lee contador + esPar -->
-  <p>Categoría: <strong>{{ categoria() }}</strong></p>
-</section>
-
-<!-- ══ historial estado inmutable ══ -->
-<section>
-  <h2>Arrays con signals — inmutabilidad</h2>
-  <!-- update() con spread crea NUEVA referencia cada vez -->
-  @if (historial().length === 0) {
-    <p><em>Sin movimientos todavía. Usa los botones.</em></p>
-  } @else {
-    <p>Movimientos: {{ historial().length }}</p>
-    <ul>
-      @for (valor of historial(); track $index) {
-        <li>Paso {{ $index + 1 }} → valor {{ valor }}</li>
-      }
+  <!-- Computados -->
+  <ui-card titulo="computed() — derivados">
+    <ul class="space-y-2 text-sm">
+      <li class="flex justify-between items-center">
+        <span class="text-text-muted">El doble</span>
+        <ui-badge tonalidad="primario">{{ doble() }}</ui-badge>
+      </li>
+      <li class="flex justify-between items-center">
+        <span class="text-text-muted">¿Positivo?</span>
+        <ui-badge [tonalidad]="esPositivo() ? 'exito' : 'muted'">
+          {{ esPositivo() ? 'sí' : 'no' }}
+        </ui-badge>
+      </li>
+      <li class="flex justify-between items-center">
+        <span class="text-text-muted">¿Par?</span>
+        <ui-badge [tonalidad]="esPar() ? 'exito' : 'muted'">
+          {{ esPar() ? 'sí' : 'no' }}
+        </ui-badge>
+      </li>
+      <li class="flex justify-between items-center">
+        <span class="text-text-muted">Categoría</span>
+        @let cat = categoria();
+        <ui-badge [tonalidad]="cat === 'par positivo' ? 'acento' : 'primario'">
+          {{ cat }}
+        </ui-badge>
+      </li>
     </ul>
-  }
-</section>
+  </ui-card>
+</div>
 
-<section>
-  <h2>effect() — side effects reactivos</h2>
-  <p>Abre la consola del navegador (F12): cada cambio del contador
-     dispara un <code>console.log</code> desde el effect().</p>
-</section>
+<!-- Historial -->
+<ui-card titulo="Historial (array inmutable)" etiqueta="update + spread" class="mt-5">
+  @if (historial().length === 0) {
+    <p class="text-text-muted text-sm italic">Sin movimientos — usa los botones.</p>
+  } @else {
+    <div class="flex flex-wrap gap-1.5">
+      @for (valor of historial(); track $index) {
+        <ui-badge tonalidad="muted">{{ valor }}</ui-badge>
+      }
+    </div>
+    <p class="text-xs text-text-faint mt-3">
+      {{ historial().length }} movimientos registrados.
+    </p>
+  }
+</ui-card>
+
+<!-- Effect: indicador visual -->
+<ui-card titulo="effect() — consola" class="mt-5">
+  <p class="text-sm text-text-muted">
+    Abre F12 — cada cambio del contador dispara un log desde el effect.
+  </p>
+</ui-card>

@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Ia } from './ia';
 import { IaService } from '../../core/services/ia';
 
-describe('Ia (chat)', () => {
+// Spec actualizado para el rebuild UI del M25 (selectores nuevos).
+describe('Ia (chat) — tras rebuild UI', () => {
   let componente: Ia;
   let fixture: ComponentFixture<Ia>;
   let svc: IaService;
@@ -11,40 +12,43 @@ describe('Ia (chat)', () => {
     await TestBed.configureTestingModule({ imports: [Ia] }).compileComponents();
     svc = TestBed.inject(IaService);
     svc.limpiar();
+    svc.configurarApiKey('');            // partimos sin key
     fixture = TestBed.createComponent(Ia);
     componente = fixture.componentInstance;
     await fixture.whenStable();
   });
 
+  // Helper: input del chat (placeholder distintivo)
+  const inputChat = (): HTMLInputElement | null =>
+    fixture.nativeElement.querySelector('input[placeholder*="Escribe"]');
+
   it('crea el componente', () => {
     expect(componente).toBeTruthy();
   });
 
-  it('input de chat deshabilitado sin API key', () => {
-    svc.configurarApiKey('');
-    svc.limpiar();
+  it('input del chat deshabilitado sin API key', async () => {
     fixture.detectChanges();
-    const input = fixture.nativeElement.querySelector('.input-chat input');
-    expect(input.disabled).toBe(true);
+    await fixture.whenStable();
+    expect(inputChat()?.disabled).toBe(true);
   });
 
-  it('input habilitado cuando hay key configurada', () => {
+  it('input habilitado cuando hay key configurada', async () => {
     svc.configurarApiKey('sk-fake');
     fixture.detectChanges();
-    const input = fixture.nativeElement.querySelector('.input-chat input');
-    expect(input.disabled).toBe(false);
+    await fixture.whenStable();
+    expect(inputChat()?.disabled).toBe(false);
   });
 
-  it('muestra burbujas por cada mensaje del historial', async () => {
+  it('burbujas: texto de historial visible en el DOM', async () => {
     svc.configurarApiKey('sk-fake');
-    // Simulamos turnos ya presentes sin llamar a la API real
     svc['historial'].set([
-      { rol: 'user', contenido: 'Hola' },
-      { rol: 'assistant', contenido: 'Hola, ¿en qué te ayudo?' },
+      { rol: 'user', contenido: 'Hola IA' },
+      { rol: 'assistant', contenido: 'Hola humano' },
     ]);
     fixture.detectChanges();
     await fixture.whenStable();
-    const burbujas = fixture.nativeElement.querySelectorAll('.burbuja');
-    expect(burbujas.length).toBe(2);
+    const html = fixture.nativeElement.textContent as string;
+    expect(html).toContain('Hola IA');
+    expect(html).toContain('Hola humano');
   });
 });

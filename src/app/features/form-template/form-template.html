@@ -1,109 +1,84 @@
-<h1>Módulo 11 — Formularios template-driven</h1>
-<p>Validaciones y binding declarados directamente en el HTML con <code>ngModel</code>.</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">📝 Formularios template-driven</h1>
+  <p class="text-text-muted mt-1">
+    ngModel + ngForm — validaciones declaradas en el HTML.
+  </p>
+</header>
 
-<!-- #formulario="ngForm" → referencia al FormGroup generado por Angular -->
-<!-- (ngSubmit) se dispara SOLO si el formulario es válido (con novalidate en el form lo controlamos nosotros) -->
-<form #formulario="ngForm" (ngSubmit)="alEnviar()" novalidate>
+<ui-card titulo="Formulario de contacto" etiqueta="template-driven">
+  <form #formulario="ngForm" (ngSubmit)="alEnviar()" novalidate>
 
-  <!-- ── Input texto con ngModel two-way y validación required ── -->
-  <label>
-    Nombre:
-    <!-- name="" es OBLIGATORIO en template-driven: es la clave en ngForm -->
-    <input name="nombre"
-           [(ngModel)]="modelo().nombre"
-           required
-           minlength="3"
-           #nombre="ngModel" />
-  </label>
-
-  <!-- Mensajes de error: ngModel expone .touched (visitado) y .errors -->
-  @if (nombre.touched) {
-    @if (nombre.errors?.['required']) {
-      <small class="error">El nombre es obligatorio.</small>
+    <!-- Nombre -->
+    <label>
+      Nombre:
+      <input name="nombre" [(ngModel)]="modelo().nombre" required minlength="3" #nombre="ngModel" />
+    </label>
+    @if (nombre.touched) {
+      @if (nombre.errors?.['required'])  { <small class="error">Obligatorio.</small> }
+      @if (nombre.errors?.['minlength']) { <small class="error">Mínimo 3 caracteres.</small> }
+      @if (nombre.valid)                 { <small class="ok">✓ Válido</small> }
     }
-    @if (nombre.errors?.['minlength']) {
-      <small class="error">Mínimo 3 caracteres (tienes
-        {{ nombre.errors?.['minlength'].actualLength }}).</small>
-    }
-    @if (nombre.valid) {
-      <small class="ok">✓ Nombre válido</small>
-    }
+
+    <!-- Email -->
+    <label>
+      Email:
+      <input name="email" type="email" [(ngModel)]="modelo().email" required email #email="ngModel" />
+    </label>
+    @if (email.touched && email.errors?.['email']) { <small class="error">Email inválido.</small> }
+
+    <!-- Edad -->
+    <label>
+      Edad:
+      <input name="edad" type="number" [(ngModel)]="modelo().edad" min="18" max="99" #edad="ngModel" />
+    </label>
+    @if (edad.touched && edad.errors?.['min']) { <small class="error">Debes ser mayor de edad.</small> }
+
+    <!-- Tema -->
+    <label>
+      Tema:
+      <select name="tema" [(ngModel)]="modelo().tema">
+        <option value="claro">Claro</option>
+        <option value="oscuro">Oscuro</option>
+      </select>
+    </label>
+
+    <!-- Términos -->
+    <label class="flex-row">
+      <input name="terminos" type="checkbox" [(ngModel)]="modelo().aceptaTerminos" required #terminos="ngModel" />
+      Acepto los términos
+    </label>
+    @if (terminos.touched && terminos.errors?.['required']) { <small class="error">Requerido.</small> }
+
+    <!-- Estados del form -->
+    <div class="estados">
+      <span [class.ok]="formulario.valid" [class.error]="formulario.invalid">
+        valid: {{ formulario.valid }}
+      </span>
+      <span class="text-text-faint">touched: {{ formulario.touched }}</span>
+      <span class="text-text-faint">dirty: {{ formulario.dirty }}</span>
+      <span class="text-text-faint">submitted: {{ formulario.submitted }}</span>
+    </div>
+
+    <div class="flex gap-2">
+      <button type="submit" [disabled]="formulario.invalid"
+              class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                     disabled:opacity-40 transition-all shadow-(--shadow)">
+        Enviar
+      </button>
+      <button type="button" (click)="reiniciar(); formulario.resetForm()"
+              class="rounded-md bg-bg-panel border border-border px-4 py-2 text-sm
+                     text-text-muted hover:text-text transition-colors">
+        Reiniciar
+      </button>
+    </div>
+  </form>
+
+  @if (enviado()) {
+    <div class="exito">✅ Enviado correctamente — json abajo o en consola.</div>
   }
 
-  <!-- ── Email con validación nativa type="email" ── -->
-  <label>
-    Email:
-    <input name="email"
-           type="email"
-           [(ngModel)]="modelo().email"
-           required
-           email
-           #email="ngModel" />
-  </label>
-  @if (email.touched && email.errors?.['email']) {
-    <small class="error">Formato de email inválido.</small>
-  }
-
-  <!-- ── Número con rango ── -->
-  <label>
-    Edad:
-    <input name="edad"
-           type="number"
-           [(ngModel)]="modelo().edad"
-           min="18"
-           max="99"
-           #edad="ngModel" />
-  </label>
-  @if (edad.touched && edad.errors?.['min']) {
-    <small class="error">Debes ser mayor de edad.</small>
-  }
-
-  <!-- ── Select con ngModel ── -->
-  <label>
-    Tema:
-    <select name="tema" [(ngModel)]="modelo().tema">
-      <option value="claro">Claro</option>
-      <option value="oscuro">Oscuro</option>
-    </select>
-  </label>
-
-  <!-- ── Checkbox ── -->
-  <label>
-    <input name="terminos"
-           type="checkbox"
-           [(ngModel)]="modelo().aceptaTerminos"
-           required
-           #terminos="ngModel" />
-    Acepto los términos
-  </label>
-  @if (terminos.touched && terminos.errors?.['required']) {
-    <small class="error">Debes aceptar los términos.</small>
-  }
-
-  <!-- ── Estados del formulario ── -->
-  <div class="estados">
-    <span [class.ok]="formulario.valid" [class.error]="formulario.invalid">
-      valid: {{ formulario.valid }}
-    </span>
-    <span>touched: {{ formulario.touched }}</span>
-    <span>dirty: {{ formulario.dirty }}</span>
-    <span>submitted: {{ formulario.submitted }}</span>
-  </div>
-
-  <!-- Botón submit deshabilitado hasta que el form sea válido -->
-  <button type="submit" [disabled]="formulario.invalid">Enviar</button>
-  <button type="button" (click)="reiniciar(); formulario.resetForm()">Reiniciar</button>
-</form>
-
-<!-- ── Feedback post-envío ── -->
-@if (enviado()) {
-  <div class="exito">
-    ✅ Enviado correctamente. Mira la consola (F12) o el JSON abajo.
-  </div>
-}
-
-<!-- Modelo en vivo con JsonPipe: observa ngModel mutando el objeto -->
-<details>
-  <summary>Ver modelo en vivo (json pipe)</summary>
-  <pre>{{ modelo() | json }}</pre>
-</details>
+  <details class="mt-4">
+    <summary class="text-sm text-text-muted cursor-pointer">Modelo en vivo (json pipe)</summary>
+    <pre class="mt-2 text-xs text-text-muted bg-bg-app p-3 rounded-md overflow-x-auto">{{ modelo() | json }}</pre>
+  </details>
+</ui-card>

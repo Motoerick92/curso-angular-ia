@@ -1,72 +1,75 @@
-<h1>Módulo 12 — Reactive Forms + validadores custom</h1>
-<p>Todo el form vive en TypeScript. El HTML solo lo conecta con <code>formControlName</code>.</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🧾 Reactive Forms + custom</h1>
+  <p class="text-text-muted mt-1">
+    El form vive en TS; el template solo conecta con <code>formControlName</code>.
+  </p>
+</header>
 
-<!-- [formGroup] enlaza el FormGroup de la clase con el <form> del template -->
-<form [formGroup]="form" (ngSubmit)="alEnviar()" novalidate>
+<ui-card titulo="Registro reactivo" etiqueta="FormBuilder">
+  <form [formGroup]="form" (ngSubmit)="alEnviar()" novalidate>
 
-  <!-- Usuario: validador custom (sin espacios) -->
-  <label>
-    Usuario:
-    <!-- formControlName = nombre del control dentro del form -->
-    <input formControlName="usuario" placeholder="sin espacios" />
-  </label>
-  <!-- usuario. y usuario. vienen del getter en la clase -->
-  @if (usuario.touched) {
-    @if (usuario.errors?.['required']) { <small class="error">Obligatorio.</small> }
-    @if (usuario.errors?.['minlength']) { <small class="error">Mínimo 3 caracteres.</small> }
-    @if (usuario.errors?.['espacios']) { <small class="error">¡Sin espacios! (validador custom)</small> }
-    @if (usuario.valid) { <small class="ok">✓ Válido</small> }
+    <!-- Usuario -->
+    <label>
+      Usuario (sin espacios):
+      <input formControlName="usuario" placeholder="ej: erick_dev" />
+    </label>
+    @if (usuario.touched) {
+      @if (usuario.errors?.['required'])  { <small class="error">Obligatorio.</small> }
+      @if (usuario.errors?.['minlength']) { <small class="error">Mínimo 3 caracteres.</small> }
+      @if (usuario.errors?.['espacios'])  { <small class="error">¡Sin espacios! (custom)</small> }
+      @if (usuario.valid)                 { <small class="ok">✓ Válido</small> }
+    }
+
+    <!-- Email -->
+    <label>
+      Email:
+      <input formControlName="email" type="email" placeholder="tu@email.com" />
+    </label>
+    @if (email.touched && email.errors?.['email']) { <small class="error">Email inválido.</small> }
+
+    <!-- Edad -->
+    <label>
+      Edad:
+      <input formControlName="edad" type="number" placeholder="18+" />
+    </label>
+    @if (edad.touched && edad.errors?.['edadMinima']) {
+      <small class="error">
+        Mínimo {{ edad.errors?.['edadMinima'].minima }} (tienes {{ edad.errors?.['edadMinima'].actual }})
+      </small>
+    }
+
+    <!-- Grupo anidado -->
+    <fieldset formGroupName="direccion">
+      <legend>Dirección (grupo anidado)</legend>
+      <label>Calle: <input formControlName="calle" /></label>
+      <label>Ciudad: <input formControlName="ciudad" /></label>
+    </fieldset>
+
+    <!-- Estado global -->
+    <div class="estados">
+      <span [class.ok]="form.valid" [class.error]="form.invalid">valid: {{ form.valid }}</span>
+      <span class="text-text-faint">dirty: {{ form.dirty }}</span>
+    </div>
+
+    <div class="flex gap-2">
+      <button type="submit"
+              class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium shadow-(--shadow)">
+        Enviar (muestra errores)
+      </button>
+      <button type="button" (click)="reiniciar()"
+              class="rounded-md bg-bg-panel border border-border px-4 py-2 text-sm
+                     text-text-muted hover:text-text transition-colors">
+        Reiniciar
+      </button>
+    </div>
+  </form>
+
+  @if (enviado()) {
+    <div class="exito">✅ Formulario válido enviado.</div>
   }
 
-  <!-- Email -->
-  <label>
-    Email:
-    <input formControlName="email" type="email" />
-  </label>
-  @if (email.touched && email.errors?.['email']) { <small class="error">Email inválido.</small> }
-
-  <!-- Edad con validador custom con parámetro -->
-  <label>
-    Edad:
-    <input formControlName="edad" type="number" />
-  </label>
-  @if (edad.touched && edad.errors?.['edadMinima']) {
-    <small class="error">
-      Mínimo {{ edad.errors?.['edadMinima'].minima }} años
-      (tienes {{ edad.errors?.['edadMinima'].actual }}).
-    </small>
-  }
-
-  <!-- Grupo anidado: dirección -->
-  <fieldset formGroupName="direccion">
-    <legend>Dirección</legend>
-    <label>
-      Calle:
-      <input formControlName="calle" />
-    </label>
-    <label>
-      Ciudad:
-      <input formControlName="ciudad" />
-    </label>
-  </fieldset>
-
-  <!-- Estado del form completo -->
-  <div class="estados">
-    <span>valid: {{ form.valid }}</span>
-    <span>dirty: {{ form.dirty }}</span>
-  </div>
-
-  <button type="submit">Enviar (valida y muestra errores)</button>
-  <button type="button" (click)="reiniciar()">Reiniciar</button>
-</form>
-
-<!-- Confirmación visual -->
-@if (enviado()) {
-  <div class="exito">✅ Formulario válido enviado.</div>
-}
-
-<!-- Value en vivo: observable del form completo -->
-<details>
-  <summary>Ver valor en vivo</summary>
-  <pre>{{ form.value | json }}</pre>
-</details>
+  <details class="mt-4">
+    <summary class="text-sm text-text-muted cursor-pointer">Valor en vivo</summary>
+    <pre class="mt-2 text-xs text-text-muted bg-bg-app p-3 rounded-md overflow-x-auto">{{ form.value | json }}</pre>
+  </details>
+</ui-card>

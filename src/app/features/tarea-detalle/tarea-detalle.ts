@@ -1,11 +1,13 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Tareas } from '../../core/services/tareas';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // Página de DETALLE: lee el id de la URL (/tarea/2) y pide datos al servicio.
 @Component({
   selector: 'app-tarea-detalle',
-  imports: [RouterLink],
+  imports: [RouterLink, UiCard, UiBadge],
   templateUrl: './tarea-detalle.html',
   styleUrl: './tarea-detalle.css',
 })

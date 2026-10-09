@@ -1,57 +1,44 @@
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  max-width: 420px;
+  gap: 0.9rem;
+  max-width: 520px;
 }
 
 fieldset {
-  border: 1px solid #45475a;
-  border-radius: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 0.75rem;
 }
+
+legend { color: var(--text-muted); font-size: 0.85rem; }
 
 label {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
 input {
-  padding: 0.4rem;
-  border-radius: 4px;
-  border: 1px solid #45475a;
-  background: #181825;
-  color: #cdd6f4;
-}
-
-input.ng-touched.ng-invalid {
-  border-color: #f38ba8;
-}
-
-.error {
-  color: #f38ba8;
-  font-size: 0.85rem;
-}
-
-.ok {
-  color: #a6e3a1;
-  font-size: 0.85rem;
-}
-
-.estados {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.85rem;
-  background: #1e1e2e;
   padding: 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-panel);
+  color: var(--text);
+  transition: all 200ms;
 }
 
-.exito {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background: #a6e3a1;
-  color: #1e1e2e;
-  border-radius: 4px;
+input:focus {
+  border-color: var(--primary);
+  outline: 2px solid rgb(79 70 229 / 0.35);
+  outline-offset: 2px;
 }
+
+input.ng-touched.ng-invalid { border-color: #f38ba8; }
+
+.error   { color: #f38ba8; font-size: 0.85rem; }
+.ok      { color: #a6e3a1; font-size: 0.85rem; }
+.exito   { margin-top: 1rem; padding: 0.75rem; background: #a6e3a1; color: #1e1e2e; border-radius: var(--radius-sm); }
+.estados { display: flex; gap: 1rem; font-size: 0.85rem; background: var(--bg-panel); padding: 0.5rem; border-radius: var(--radius-sm); }

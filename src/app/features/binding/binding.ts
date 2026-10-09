@@ -1,5 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // Demostración de los 4 tipos de data binding en Angular:
 // 1) Interpolación      {{ }}         → clase → template (texto)
@@ -9,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-binding',
   // FormsModule es OBLIGATORIO para usar [(ngModel)]
-  imports: [FormsModule],
+  imports: [FormsModule, UiCard, UiBadge],
   templateUrl: './binding.html',
   styleUrl: './binding.css',
 })

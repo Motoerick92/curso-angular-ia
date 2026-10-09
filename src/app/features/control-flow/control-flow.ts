@@ -1,4 +1,6 @@
 import { Component, signal } from '@angular/core';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
 
 // Modelo simple de tarea para los ejemplos de @for
 interface Tarea {
@@ -10,11 +12,13 @@ interface Tarea {
 
 @Component({
   selector: 'app-control-flow',
-  imports: [],
+  imports: [UiCard, UiBadge],
   templateUrl: './control-flow.html',
   styleUrl: './control-flow.css',
 })
 export class ControlFlow {
+  // Tabs disponibles para el @switch
+  readonly pestanas = ['lista', 'stats', 'config'] as const;
   // ── Estado para demo de @if ──
   mostrarDetalle = signal(false);
 

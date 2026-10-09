@@ -1,48 +1,51 @@
-<h1>Módulo 14 — Comunicación entre componentes</h1>
-<p>Tres patrones según la distancia entre componentes.</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">💬 Comunicación entre componentes</h1>
+  <p class="text-text-muted mt-1">3 patrones según la distancia entre componentes.</p>
+</header>
 
-<!-- ══ ① SERVICIO PUENTE: entre cualquier parte de la app ══ -->
-<section>
-  <h2>① Servicio compartido (puente)</h2>
-  <p>
-    El estado del servicio es visible en CUALQUIER componente que lo
-    inyecte — incluso si están en rutas distintas.
+<!-- ① Servicio puente -->
+<ui-card titulo="① Servicio compartido (puente)" etiqueta="anywhere">
+  <p class="text-sm text-text-muted mb-3">
+    El estado del servicio es visible en CUALQUIER componente — sobrevive cambios de ruta.
   </p>
+  <div class="flex gap-2 items-center flex-wrap">
+    <button (click)="enviarMensaje('esta página')"
+            class="rounded-md bg-accent/20 text-accent-soft border border-accent/30 px-3 py-1.5
+                   text-sm font-medium hover:bg-accent/30 transition-all">
+      Enviar mensaje desde aquí
+    </button>
+    <ui-badge tonalidad="acento">{{ puente.mensaje() }}</ui-badge>
+  </div>
+  <p class="mt-3 text-xs text-text-faint">
+    Cambia de ruta y vuelve — el mensaje persiste porque el servicio es singleton.
+  </p>
+</ui-card>
 
-  <button (click)="enviarMensaje('esta página')">Enviar mensaje desde aquí</button>
-
-  <p>Mensaje actual en el puente: <strong>{{ puente.mensaje() }}</strong></p>
-
-  <small>
-    Ve a otra ruta, vuelve — el mensaje sigue ahí porque el servicio es
-    singleton (<code>providedIn: 'root'</code>).
-  </small>
-</section>
-
-<!-- ══ ② viewChild: padre controla hijo directo ══ -->
-<section>
-  <h2>② viewChild() — el padre llama métodos del hijo</h2>
-
-  <!-- El hijo NO recibe inputs. Vive su propia vida. -->
+<!-- ② viewChild -->
+<ui-card titulo="② viewChild — padre llama métodos del hijo" etiqueta="directo" class="mt-5">
   <app-contador-hijo />
+  <button (click)="resetearDesdeElPadre()"
+          class="mt-3 rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                 transition-all duration-200 hover:-translate-y-0.5 shadow-(--shadow)">
+    Resetear hijo desde el PADRE
+  </button>
+</ui-card>
 
-  <!-- Pero el padre puede invocar sus métodos por referencia -->
-  <button (click)="resetearDesdeElPadre()">Resetear hijo desde el PADRE</button>
-</section>
-
-<!-- ══ Guía rápida ══ -->
-<section class="nota">
-  <h2>¿Qué patrón usar cuándo?</h2>
-  <table>
+<!-- Guía -->
+<ui-card titulo="③ Qué patrón usar cuándo" class="mt-5">
+  <table class="w-full text-sm">
     <thead>
-      <tr><th>Relación</th><th>Patrón</th></tr>
+      <tr class="text-left text-text-muted border-b border-border">
+        <th class="py-2">Relación</th>
+        <th>Patrón</th>
+      </tr>
     </thead>
     <tbody>
-      <tr><td>Padre → hijo (datos)</td><td><code>input()</code></td></tr>
-      <tr><td>Hijo → padre (evento)</td><td><code>output()</code></td></tr>
-      <tr><td>Padre invoca método del hijo</td><td><code>viewChild()</code></td></tr>
-      <tr><td>Hermanos / rutas distintas</td><td><code>servicio + signals</code></td></tr>
-      <tr><td>Estado global de la app</td><td><code>servicio singleton</code></td></tr>
+      <tr class="border-b border-border/50"><td class="py-2 text-text-muted">Padre → hijo</td><td><code>input()</code></td></tr>
+      <tr class="border-b border-border/50"><td class="py-2 text-text-muted">Hijo → padre</td><td><code>output()</code></td></tr>
+      <tr class="border-b border-border/50"><td class="py-2 text-text-muted">Padre método del hijo</td><td><code>viewChild()</code></td></tr>
+      <tr class="border-b border-border/50"><td class="py-2 text-text-muted">Hermanos / rutas</td><td>servicio + signals</td></tr>
+      <tr><td class="py-2 text-text-muted">Estado global</td><td>servicio singleton</td></tr>
     </tbody>
   </table>
-</section>
+</ui-card>

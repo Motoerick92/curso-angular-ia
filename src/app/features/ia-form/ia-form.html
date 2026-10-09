@@ -1,68 +1,85 @@
-<h1>Módulo 23 — IA en formularios</h1>
-<p>
-  Escribe el título de una tarea y la IA sugiere descripción + prioridad.
-  La respuesta JSON se parsea y rellena el formulario con <code>patchValue</code>.
-</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🪄 IA en formularios</h1>
+  <p class="text-text-muted mt-1">La IA sugiere contenido; el formulario se llena solo.</p>
+</header>
 
-@let tieneKey = !!ia.apiKey();
-@if (!tieneKey) {
-  <div class="warning">
-    ⚠ Configura tu API key primero en <a routerLink="/ia">la página de IA</a>.
-  </div>
+@if (!ia.apiKey()) {
+  <ui-card variant="elevada">
+    <div class="text-center py-6 text-text-muted">
+      <p class="text-3xl mb-2">⚠️</p>
+      <p class="text-sm">
+        Configura tu API key en <a routerLink="/ia" class="text-primary-soft">la página de IA</a> primero.
+      </p>
+    </div>
+  </ui-card>
+} @else {
+  <ui-card titulo="Nueva tarea asistida" etiqueta="IA genera campos">
+    <form [formGroup]="form" (ngSubmit)="guardar()" novalidate class="space-y-4 max-w-xl">
+
+      <label class="block text-sm">
+        <span class="text-text-muted">Título</span>
+        <input formControlName="titulo" placeholder="ej: Optimizar consultas SQL"
+               class="mt-1 w-full rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                      text-text focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"/>
+      </label>
+      @if (form.get('titulo')?.touched && form.get('titulo')?.hasError('required')) {
+        <small class="text-red-300">El título es obligatorio (la IA parte de aquí).</small>
+      }
+
+      <button type="button"
+              [disabled]="generando() || !form.value.titulo"
+              (click)="generarConIa()"
+              class="rounded-md bg-accent/20 text-accent-soft border border-accent/40 px-4 py-2
+                     text-sm font-medium transition-all duration-200 hover:bg-accent/30
+                     disabled:opacity-40 disabled:cursor-not-allowed">
+        {{ generando() ? '🪄 Generando…' : '🪄 Generar detalles con IA' }}
+      </button>
+
+      @if (errorIa(); as err) {
+        <div class="rounded-md bg-red-500/10 border border-red-500/30 px-3 py-2 text-sm text-red-300">
+          ❌ {{ err }}
+        </div>
+      }
+
+      <label class="block text-sm">
+        <span class="text-text-muted">Descripción (rellenable por IA, editable por ti)</span>
+        <textarea formControlName="descripcion" rows="3"
+                  class="mt-1 w-full rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                         text-text focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none"></textarea>
+      </label>
+
+      <label class="block text-sm">
+        <span class="text-text-muted">Prioridad sugerida</span>
+        <select formControlName="prioridad"
+                class="mt-1 w-full rounded-md border border-border bg-bg-panel px-3 py-2 text-sm
+                       text-text focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none">
+          <option value="alta">Alta</option>
+          <option value="media">Media</option>
+          <option value="baja">Baja</option>
+        </select>
+      </label>
+
+      <button type="submit" [disabled]="form.invalid"
+              class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                     disabled:opacity-40 transition-all hover:-translate-y-0.5 shadow-(--shadow)">
+        ✓ Guardar en el store
+      </button>
+
+      @if (guardadoOk()) {
+        <div class="rounded-md bg-emerald-500/15 border border-emerald-500/30 px-3 py-2 text-sm text-emerald-300">
+          ✅ Guardada — mírala en el Store.
+        </div>
+      }
+    </form>
+
+    <details class="mt-5">
+      <summary class="text-sm text-text-muted cursor-pointer">🔧 Truco del parseo JSON</summary>
+      <ol class="mt-2 text-xs text-text-muted space-y-1 list-decimal list-inside">
+        <li>Prompt system: "responde SOLO JSON".</li>
+        <li>Regex <code>/\&#123;[\s\S]*\&#125;/</code> por si la IA mete markdown.</li>
+        <li>Validación de enums cerrados antes de aplicar.</li>
+        <li><code>patchValue</code> rellena sin borrar lo tuyo.</li>
+      </ol>
+    </details>
+  </ui-card>
 }
-
-<form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
-
-  <label>
-    Título de la tarea:
-    <input formControlName="titulo"
-           placeholder="ej: Optimizar consultas SQL lentas" />
-  </label>
-  @if (form.get('titulo')?.touched && form.get('titulo')?.hasError('required')) {
-    <small class="error">El título es obligatorio (la IA parte de aquí).</small>
-  }
-
-  <!-- Botón mágico: llama al servicio con solo el título -->
-  <button type="button"
-          class="magic"
-          [disabled]="generando() || !tieneKey || !form.value.titulo"
-          (click)="generarConIa()">
-    {{ generando() ? '🪄 Generando…' : '🪄 Generar detalles con IA' }}
-  </button>
-
-  @if (errorIa(); as err) {
-    <div class="error-bar">❌ {{ err }}</div>
-  }
-
-  <label>
-    Descripción (rellenable por IA, editable por ti):
-    <textarea formControlName="descripcion" rows="3"></textarea>
-  </label>
-
-  <label>
-    Prioridad sugerida:
-    <select formControlName="prioridad">
-      <option value="alta">Alta</option>
-      <option value="media">Media</option>
-      <option value="baja">Baja</option>
-    </select>
-  </label>
-
-  <button type="submit" [disabled]="form.invalid">
-    ✓ Guardar en el Store de tareas
-  </button>
-
-  @if (guardadoOk()) {
-    <div class="ok-bar">✅ Tarea guardada — mírala en el Store.</div>
-  }
-</form>
-
-<section class="nota">
-  <h2>El truco del parseo</h2>
-  <ol>
-    <li>Prompt system: "responde SOLO JSON, sin markdown".</li>
-    <li>Por si ignora la instrucción: regex <code>/\&#123;[\s\S]*\&#125;/</code> extrae el objeto.</li>
-    <li>Se valida la prioridad antes de aplicarla (valores cerrados).</li>
-    <li><code>patchValue</code> rellena sin borrar lo que el usuario escribió.</li>
-  </ol>
-</section>

@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { IaService } from '../../core/services/ia';
 import { TareasStore } from '../../core/store/tareas-store';
+import { UiCard } from '../../shared/components/ui/ui-card';
 
 // ═══════════════════════════════════════════════════════════════
 // IA APLICADA A FORMULARIOS: das un título y la IA genera
@@ -11,7 +12,7 @@ import { TareasStore } from '../../core/store/tareas-store';
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-ia-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, UiCard],
   templateUrl: './ia-form.html',
   styleUrl: './ia-form.css',
 })
