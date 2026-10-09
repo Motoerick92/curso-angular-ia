@@ -1,0 +1,60 @@
+<h1>Proyecto Final — Mi Productividad IA</h1>
+
+<!-- Panel bloqueado sin login (mismo guard UX que M9) -->
+@if (!auth.logueado()) {
+  <div class="bloqueo">
+    <h2>🔒 Inicia sesión para ver tu dashboard</h2>
+    <p>Usa el login arriba a la derecha en la barra de navegación.</p>
+  </div>
+} @else {
+
+  <!-- ── Stats band ── -->
+  <section class="stats">
+    <div class="stat"><b>{{ store.total() }}</b><span>Total</span></div>
+    <div class="stat"><b>{{ store.completadas() }}</b><span>Hechas</span></div>
+    <div class="stat"><b>{{ store.total() - store.completadas() }}</b><span>Pendientes</span></div>
+    <div class="stat"><b>{{ progreso() }}%</b><span>Progreso</span></div>
+  </section>
+
+  <!-- Barra visual de progreso -->
+  <div class="barra-fondo">
+    <div class="barra-valor" [style.width.%]="progreso()"></div>
+  </div>
+  <p class="animo">{{ estadoAnimo() }}</p>
+
+  <!-- ── Acciones rápidas ── -->
+  <section class="acciones">
+    <a routerLink="/ia-form" class="cta">🪄 Nueva tarea asistida por IA</a>
+    <button (click)="generarResumen()"
+            [disabled]="resumenCargando()"
+            [title]="ia.apiKey() ? '' : 'Configura tu API key en /ia'">
+      @if (resumenCargando()) { ⏳ Resumiendo… } @else { 🤖 Resumen del día con IA }
+    </button>
+  </section>
+
+  <!-- Tarjeta del resumen generado -->
+  @if (resumenIa(); as resumen) {
+    <div class="resumen">
+      <h3>Tu coach IA dice:</h3>
+      <p>{{ resumen }}</p>
+    </div>
+  }
+
+  <!-- ── Pendientes del store ── -->
+  <section>
+    <h2>Pendientes ({{ store.total() - store.completadas() }})</h2>
+    @if (store.total() - store.completadas() === 0) {
+      <p class="vacio">Sin pendientes 🎉 — ¡agrega más o disfruta la calma!</p>
+    } @else {
+      @for (t of store.lista(); track t.id) {
+        @if (!t.hecha) {
+          <app-tarjeta-tarea
+            [tarea]="t"
+            (hechaCambiada)="store.alternar(t.id)"
+            (eliminar)="store.eliminar(t.id)"
+          />
+        }
+      }
+    }
+  </section>
+}
