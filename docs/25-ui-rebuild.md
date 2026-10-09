@@ -120,6 +120,22 @@ El compilador de templates no falla con props planas — pero la app deja de
 ser reactiva silenciosamente. Este bug apareció en los tests porque allí
 llamamos el método imperativamente sin un evento DOM que dispare CD.
 
+## PASO 4 — Rebuild TODAS las features (completado en batches)
+| Batch | Páginas | Notas |
+|---|---|---|
+| 1 | dashboard (premium), inicio (hero) | `31e81dd` |
+| 2 | store, servicios, http, rxjs, async-pipe, optimizacion | `3718c5b` |
+| 3 | form-template, form-reactivo, pipes-directivas, control-flow, comunicacion, directivas-custom, ia chat, ia-form, admin, tarea-detalle | `3f9eb19` |
+
+Bugs reales capturados en el rebuild:
+- Props planas con zoneless no re-renderizan en tests (fix M25: signal en inicio).
+- `@for`/`@else`/llaves `{ }` literales en texto rompen el parser de template → `&#64;` / `&#123;` `&#125;`.
+- Specs con selectores viejos (`.input-chat`) rompen al rediseñar → selectors por placeholder/texto.
+
+## Nota para el video
+Todo el Paso 4 mantuvo la LÓGICA intacta (signals, services, store, formularios).
+Solo cambió HTML + clases Tailwind + imports de piezas del UI kit en los .ts.
+
 ## Siguiente (al decir "siguiente")
 - ui-button, ui-badge, ui-input, ui-skeleton
 - Rebuild layout principal (sidebar, topbar)
