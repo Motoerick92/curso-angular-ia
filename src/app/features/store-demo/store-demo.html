@@ -1,52 +1,62 @@
-<h1>Módulo 16 — State management con store</h1>
-<p>
-  Mismo concepto que M8, pero con estado desnormalizado
-  (<code>entidades</code> + <code>orden</code>) y filtros reactivos.
-</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🗄️ State management con store</h1>
+  <p class="text-text-muted mt-1">
+    Estado desnormalizado (entidades + orden) con filtros reactivos.
+  </p>
+</header>
 
-<!-- ── Barra de filtros: el filtro VIVE en el store ── -->
-<div class="filtros">
-  <button [class.activo]="filtro() === 'todas'"
-          (click)="store.establecerFiltro('todas')">
-    Todas ({{ store.total() }})
-  </button>
-  <button [class.activo]="filtro() === 'pendientes'"
-          (click)="store.establecerFiltro('pendientes')">
-    Pendientes ({{ store.total() - store.completadas() }})
-  </button>
-  <button [class.activo]="filtro() === 'hechas'"
-          (click)="store.establecerFiltro('hechas')">
-    Hechas ({{ store.completadas() }})
-  </button>
+<!-- Filtros: chip activo marca el filtro actual -->
+<div class="flex gap-2 mb-5">
+  @for (f of filtros; track f.valor) {
+    <button (click)="store.establecerFiltro(f.valor)"
+            [class]="filtro() === f.valor
+              ? 'rounded-full px-4 py-1.5 text-sm font-medium bg-primary text-white shadow-(--shadow) transition-all'
+              : 'rounded-full px-4 py-1.5 text-sm font-medium bg-bg-panel border border-border text-text-muted hover:text-text transition-all'">
+      {{ f.nombre }} ({{ f.cuenta() }})
+    </button>
+  }
 </div>
 
-<!-- ── Input rápido para agregar ── -->
-<div class="agregar">
+<!-- Input con Enter + botón -->
+<div class="flex gap-2 mb-5 max-w-xl">
   <input #nuevaTarea
          type="text"
          placeholder="Nueva tarea del store…"
-         (keyup.enter)="alAgregar(nuevaTarea)" />
-  <button (click)="alAgregar(nuevaTarea)">+ Agregar</button>
+         (keyup.enter)="alAgregar(nuevaTarea)"
+         class="flex-1 rounded-md border border-border bg-bg-panel px-4 py-2 text-sm
+                text-text placeholder:text-text-faint
+                focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none" />
+  <button (click)="alAgregar(nuevaTarea)"
+          class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                 transition-all duration-200 hover:-translate-y-0.5 shadow-(--shadow)">
+    + Agregar
+  </button>
 </div>
 
-<!-- ── Lista: selección activa según filtro ── -->
+<!-- Lista filtrada con empty state -->
 @if (visibles().length === 0) {
-  <p class="vacio">
-    @if (store.total() === 0) { Sin tareas en el store. }
-    @else { Ninguna coincide con el filtro "{{ filtro() }}". }
-  </p>
+  <div class="rounded-xl border border-border bg-bg-card p-8 text-center text-text-muted">
+    <p class="text-3xl mb-2">📭</p>
+    @if (store.total() === 0) { <p>Sin tareas en el store.</p> }
+    @else { <p>Ninguna coincide con el filtro "{{ filtro() }}".</p> }
+  </div>
 } @else {
-  @for (tarea of visibles(); track tarea.id) {
-    <app-tarjeta-tarea
-      [tarea]="tarea"
-      (hechaCambiada)="store.alternar(tarea.id)"
-      (eliminar)="store.eliminar(tarea.id)"
-    />
-  }
+  <div class="space-y-2">
+    @for (tarea of visibles(); track tarea.id) {
+      <app-tarjeta-tarea
+        [tarea]="tarea"
+        (hechaCambiada)="store.alternar(tarea.id)"
+        (eliminar)="store.eliminar(tarea.id)"
+      />
+    }
+  </div>
 }
 
-<!-- ── Mini-debug: estado crudo serializado ── -->
-<details>
-  <summary>Ver estado interno del store</summary>
-  <pre>{{ store.debugEstado() }}</pre>
+<!-- Debug: estado crudo -->
+<details class="mt-8 rounded-xl border border-border bg-bg-card">
+  <summary class="px-5 py-3 cursor-pointer text-sm text-text-muted
+                  hover:text-text transition-colors">
+    🔍 Estado interno del store (debug)
+  </summary>
+  <pre class="px-5 pb-5 text-xs text-text-muted overflow-x-auto">{{ store.debugEstado() }}</pre>
 </details>

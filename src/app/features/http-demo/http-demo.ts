@@ -1,11 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { TareasApi } from '../../core/services/tareas-api';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
+import { UiSkeleton } from '../../shared/components/ui/ui-skeleton';
 
 // Componente delgado: toda la lógica HTTP está en el servicio.
 // Aquí solo inyectamos y conectamos signals con el template.
 @Component({
   selector: 'app-http-demo',
-  imports: [],
+  imports: [UiBadge, UiSkeleton],
   templateUrl: './http-demo.html',
   styleUrl: './http-demo.css',
 })

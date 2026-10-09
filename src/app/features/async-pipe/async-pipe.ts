@@ -2,6 +2,9 @@ import { Component, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AsyncPipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { UiCard } from '../../shared/components/ui/ui-card';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
+import { UiSkeleton } from '../../shared/components/ui/ui-skeleton';
 import { BehaviorSubject, of, timer } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs';
 
@@ -19,7 +22,7 @@ interface Post {
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-async-pipe',
-  imports: [AsyncPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, ReactiveFormsModule, UiCard, UiBadge, UiSkeleton],
   templateUrl: './async-pipe.html',
   styleUrl: './async-pipe.css',
 })

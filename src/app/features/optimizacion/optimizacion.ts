@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { ItemPesado } from './item-pesado/item-pesado';
+import { UiCard } from '../../shared/components/ui/ui-card';
 
 // ═══════════════════════════════════════════════════════════════
 // DEMO de optimización:
@@ -9,7 +10,7 @@ import { ItemPesado } from './item-pesado/item-pesado';
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-optimizacion',
-  imports: [ItemPesado],
+  imports: [ItemPesado, UiCard],
   templateUrl: './optimizacion.html',
   styleUrl: './optimizacion.css',
 })

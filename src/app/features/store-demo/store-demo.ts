@@ -20,6 +20,17 @@ export class StoreDemo {
   protected readonly visibles = this.store.visibles;
   protected readonly filtro = this.store.filtroActual;
 
+  // Botones de filtro con conteo live (computed)
+  protected readonly filtros: {
+    valor: 'todas' | 'pendientes' | 'hechas';
+    nombre: string;
+    cuenta: () => number;
+  }[] = [
+    { valor: 'todas', nombre: 'Todas', cuenta: () => this.store.total() },
+    { valor: 'pendientes', nombre: 'Pendientes', cuenta: () => this.store.total() - this.store.completadas() },
+    { valor: 'hechas', nombre: 'Hechas', cuenta: () => this.store.completadas() },
+  ];
+
   alAgregar(input: HTMLInputElement): void {
     this.store.agregar(input.value);
     input.value = '';                // limpiar input nativo

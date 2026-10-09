@@ -36,7 +36,8 @@ describe('Servicios (integración con Tareas svc)', () => {
   it('estadísticas reflejan completadas al alternar', async () => {
     componente.alCambiarHecha(1, true);
     await fixture.whenStable();
-    const html = fixture.nativeElement as HTMLElement;
-    expect(html.textContent).toContain('Hechas: 1');   // chip de stats
+    // El nuevo diseño separa valor y etiqueta — validamos el estado + texto
+    expect(servicio.completadas()).toBe(1);
+    expect(fixture.nativeElement.textContent).toContain('Hechas');
   });
 });

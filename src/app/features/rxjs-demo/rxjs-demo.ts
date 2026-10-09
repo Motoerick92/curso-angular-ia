@@ -4,6 +4,8 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import type { Observable } from 'rxjs';
+import { UiBadge } from '../../shared/components/ui/ui-badge';
+import { UiSkeleton } from '../../shared/components/ui/ui-skeleton';
 
 interface UsuarioApi {
   id: number;
@@ -18,7 +20,7 @@ interface UsuarioApi {
 // ═══════════════════════════════════════════════════════════════
 @Component({
   selector: 'app-rxjs-demo',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, UiBadge, UiSkeleton],
   templateUrl: './rxjs-demo.html',
   styleUrl: './rxjs-demo.css',
 })

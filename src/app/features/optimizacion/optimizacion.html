@@ -1,34 +1,43 @@
-<h1>Módulo 17 — Change detection OnPush + optimización</h1>
-
-<section>
-  <p>
-    Tick global: <strong>{{ tick() }}</strong>
-    <small>(sube cada 500ms → empuja change detection de la app)</small>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🚀 Change detection OnPush</h1>
+  <p class="text-text-muted mt-1">
+    Render granular: solo el ítem con input nuevo re-renderiza.
   </p>
-  <p>Total: <strong>{{ total() }}</strong></p>
+</header>
 
-  <button (click)="renombrarAleatorio()">Renombrar elemento aleatorio</button>
-
-  <p class="pista">
-    Observa los contadores de cada ítem: con OnPush, solo el ítem
-    cuyo input cambió vuelve a evaluar su template.
+<ui-card titulo="Demo en vivo" etiqueta="200 ítems">
+  <p class="text-sm text-text-muted">
+    Tick global: <strong class="text-accent-soft">{{ tick() }}</strong>
+    <span class="text-xs">(cada 500ms empuja CD de la app)</span>
+  </p>
+  <p class="text-sm text-text-muted mt-1">
+    Total ítems: <strong class="text-text">{{ total() }}</strong>
   </p>
 
-  <ul class="lista">
-    <!-- track es CLAVE: sin él, Angular podría re-renderizar todo -->
+  <button (click)="renombrarAleatorio()"
+          class="mt-3 rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white
+                 font-medium transition-all duration-200 hover:-translate-y-0.5 shadow-(--shadow)">
+    ✏️ Renombrar aleatorio
+  </button>
+
+  <p class="mt-3 text-xs text-text-muted bg-bg-panel rounded-md p-3 border border-border">
+    Mira los contadores de cada ítem: con OnPush, <b>solo el editado</b> sube su render count.
+  </p>
+
+  <!-- Lista con scroll: afuera el template de Angular -->
+  <ul class="mt-4 max-h-[45vh] overflow-y-auto rounded-lg border border-border">
     @for (item of items(); track item.id) {
       <app-item-pesado [dato]="item" />
     }
   </ul>
-</section>
+</ui-card>
 
-<section class="nota">
-  <h2>Qué optimizamos y por qué</h2>
-  <ul>
-    <li><code>ChangeDetectionStrategy.OnPush</code> en el hijo — el template
-        solo se reevalúa si cambia su input o sus propios events.</li>
-    <li><code>track item.id</code> en &#64;for — reconciliación estable de listas.</li>
-    <li><code>computed()</code> — derivaciones cacheadas en vez de cálculo en template.</li>
-    <li>Mutación inmutable — nueva referencia solo para lo que cambió.</li>
+<details class="mt-6 rounded-xl border border-border bg-bg-card">
+  <summary class="px-5 py-3 cursor-pointer text-sm text-text-muted hover:text-text">📐 Estrategias</summary>
+  <ul class="px-5 pb-5 text-sm text-text-muted space-y-1">
+    <li><code>OnPush</code> en hijo — solo reevalúa si input/ signal propia cambia</li>
+    <li><code>track item.id</code> en &#64;for — reconciliación estable</li>
+    <li>Mutación inmutable — nueva referencia solo para lo editado</li>
+    <li><code>computed()</code> — derivaciones cacheadas</li>
   </ul>
-</section>
+</details>

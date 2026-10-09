@@ -1,51 +1,81 @@
-<h1>Módulo 8 — Servicios e inyección</h1>
-<p>
-  El estado vive en <code>Tareas</code> (core/services).
-  Este componente solo INYECTA el servicio y lo usa.
-</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🧰 Servicios e inyección</h1>
+  <p class="text-text-muted mt-1">
+    El estado vive en <code class="text-accent-soft">core/services/tareas.ts</code> — singleton compartido.
+  </p>
+</header>
 
-<!-- ── Panel de estadísticas: derivados computeds del servicio ── -->
-<div class="stats">
-  <span>Total: <strong>{{ tareasSvc.total() }}</strong></span>
-  <span>Pendientes: <strong>{{ tareasSvc.pendientes() }}</strong></span>
-  <span>Hechas: <strong>{{ tareasSvc.completadas() }}</strong></span>
+<!-- Panel de stats con gradientes suaves -->
+<div class="grid grid-cols-3 gap-3 mb-5 max-w-xl">
+  <div class="rounded-xl border border-border bg-bg-card p-4 text-center">
+    <p class="text-2xl font-bold text-primary-soft">{{ tareasSvc.total() }}</p>
+    <p class="text-xs text-text-muted uppercase">Total</p>
+  </div>
+  <div class="rounded-xl border border-border bg-bg-card p-4 text-center">
+    <p class="text-2xl font-bold text-amber-300">{{ tareasSvc.pendientes() }}</p>
+    <p class="text-xs text-text-muted uppercase">Pendientes</p>
+  </div>
+  <div class="rounded-xl border border-border bg-bg-card p-4 text-center">
+    <p class="text-2xl font-bold text-emerald-300">{{ tareasSvc.completadas() }}</p>
+    <p class="text-xs text-text-muted uppercase">Hechas</p>
+  </div>
 </div>
 
-<!-- ── Formulario para agregar ── -->
-<!-- Template reference #nuevaTarea → variable local del DOM -->
-<div class="acciones">
+<!-- Acciones -->
+<div class="flex flex-wrap gap-2 mb-5">
   <input #nuevaTarea
          type="text"
-         placeholder="Nueva tarea..."
-         (keyup.enter)="alAgregar(nuevaTarea.value); nuevaTarea.value=''" />
-  <button (click)="alAgregar(nuevaTarea.value); nuevaTarea.value=''">Agregar</button>
-  <button class="danger" (click)="alLimpiar()">Limpiar todo</button>
-  <button (click)="alRestaurar()">Restaurar demo</button>
+         placeholder="Nueva tarea…"
+         (keyup.enter)="alAgregar(nuevaTarea.value); nuevaTarea.value=''"
+         class="flex-1 min-w-52 rounded-md border border-border bg-bg-panel px-4 py-2 text-sm
+                text-text placeholder:text-text-faint
+                focus:border-primary focus:ring-2 focus:ring-primary/40 focus:outline-none" />
+  <button (click)="alAgregar(nuevaTarea.value); nuevaTarea.value=''"
+          class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                 transition-all duration-200 hover:-translate-y-0.5 shadow-(--shadow)">
+    Agregar
+  </button>
+  <button (click)="alLimpiar()"
+          class="rounded-md bg-red-500/20 text-red-300 border border-red-500/30
+                 px-4 py-2 text-sm font-medium hover:bg-red-500/30 transition-colors">
+    Limpiar
+  </button>
+  <button (click)="alRestaurar()"
+          class="rounded-md bg-bg-panel border border-border px-4 py-2 text-sm
+                 text-text-muted hover:text-text transition-colors">
+    Restaurar demo
+  </button>
 </div>
 
-<!-- ── Lista delegada al mismo componente HIJO de M7 ── -->
-<!-- Reutilización: misma tarjeta, datos distintos (del servicio) -->
+<!-- Lista con tarjetas del M7 reutilizadas -->
 @if (!tareasSvc.hayTareas()) {
-  <p><em>No hay tareas. ¡Agrega una!</em></p>
+  <div class="rounded-xl border border-border bg-bg-card p-8 text-center text-text-muted">
+    <p class="text-3xl mb-2">📭</p>
+    <p>No hay tareas. ¡Agrega una!</p>
+  </div>
 } @else {
-  @for (tarea of tareasSvc.tareas(); track tarea.id) {
-    <!-- Reutilizamos TarjetaTarea SIN seleccionada (model opcional) -->
-    <app-tarjeta-tarea
-      [tarea]="tarea"
-      (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
-      (eliminar)="alEliminar($event)"
-    />
-    <!-- Link al detalle con parámetro de ruta -->
-    <a [routerLink]="['/tarea', tarea.id]" class="ver-detalle">Ver detalle →</a>
-  }
+  <div class="space-y-2">
+    @for (tarea of tareasSvc.tareas(); track tarea.id) {
+      <app-tarjeta-tarea
+        [tarea]="tarea"
+        (hechaCambiada)="alCambiarHecha(tarea.id, $event)"
+        (eliminar)="alEliminar($event)"
+      />
+      <a [routerLink]="['/tarea', tarea.id]"
+         class="inline-block text-xs text-primary-soft hover:text-accent-soft transition-colors mb-2">
+        Ver detalle →
+      </a>
+    }
+  </div>
 }
 
-<section class="nota">
-  <h2>Puntos clave</h2>
-  <ul>
-    <li><code>inject(Tareas)</code> → obtiene el singleton del servicio</li>
-    <li><code>providedIn: 'root'</code> → una sola instancia en toda la app</li>
-    <li>Señal privada <code>_tareas</code> + <code>asReadonly()</code> = encapsulación</li>
-    <li>Los computeds se comparten: cualquier componente los lee igual</li>
+<!-- Nota pedagógica -->
+<details class="mt-8 rounded-xl border border-border bg-bg-card">
+  <summary class="px-5 py-3 cursor-pointer text-sm text-text-muted hover:text-text">📚 Conceptos clave</summary>
+  <ul class="px-5 pb-5 text-sm text-text-muted space-y-1">
+    <li><code>inject(Tareas)</code> → obtiene el singleton</li>
+    <li><code>providedIn: 'root'</code> → 1 instancia para toda la app</li>
+    <li>Señal privada + <code>asReadonly()</code> = encapsulación</li>
+    <li>Computeds compartidos: todos los componentes leen lo mismo</li>
   </ul>
-</section>
+</details>

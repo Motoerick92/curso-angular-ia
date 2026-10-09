@@ -1,46 +1,61 @@
-<h1>Módulo 10 — HttpClient + httpResource</h1>
-<p>
-  API real: JSONPlaceholder (https://jsonplaceholder.typicode.com).
-  Cambiar el límite relanza la request automáticamente.
-</p>
+<header class="mb-6">
+  <h1 class="text-3xl font-bold">🌐 HttpClient + httpResource</h1>
+  <p class="text-text-muted mt-1">
+    API real: JSONPlaceholder. El límite es un signal → cambiarlo relanza la request.
+  </p>
+</header>
 
-<!-- Controles: cambiar signal → nueva request (gracias a httpResource) -->
-<div class="controles">
-  <button (click)="api.pedirMas()">Pedir +5 más</button>
-  <button (click)="api.recargar()">↻ Recargar</button>
-  <span>Pidiendo: <strong>{{ api.limite() }}</strong> tareas</span>
+<!-- Controles -->
+<div class="flex flex-wrap items-center gap-3 mb-5">
+  <button (click)="api.pedirMas()"
+          class="rounded-md bg-(image:--gradient-brand) px-4 py-2 text-sm text-white font-medium
+                 transition-all duration-200 hover:-translate-y-0.5 shadow-(--shadow)">
+    Pedir +5 más
+  </button>
+  <button (click)="api.recargar()"
+          class="rounded-md bg-bg-panel border border-border px-4 py-2 text-sm text-text-muted
+                 hover:text-text transition-colors">
+    ↻ Recargar
+  </button>
+  <ui-badge tonalidad="acento">Límite: {{ api.limite() }}</ui-badge>
 </div>
 
-<!-- Estado de carga: .isLoading() del resource -->
+<!-- Loading -->
 @if (api.tareasResource.isLoading()) {
-  <p class="estado">⏳ Cargando…</p>
+  <ui-skeleton forma="texto" [lineas]="5" />
 }
 
-<!-- Estado de error: .error() del resource -->
+<!-- Error -->
 @let error = api.tareasResource.error();
 @if (error) {
-  <p class="estado error">❌ Error al cargar: {{ error.message }}</p>
+  <div class="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300 mb-4">
+    ❌ Error al cargar: {{ error.message }}
+  </div>
 }
 
-<!-- Datos: .value() puede ser undefined mientras carga -->
+<!-- Datos -->
 @let tareas = api.tareasResource.value();
-@if (tareas) {
-  <ul>
+@if (tareas && !api.tareasResource.isLoading()) {
+  <ul class="space-y-2">
     @for (t of tareas; track t.id) {
-      <li [class.completada]="t.completed">
-        #{{ t.id }} — {{ t.title }}
-        (usuario {{ t.userId }})
+      <li class="rounded-lg border border-border bg-bg-card px-4 py-3 text-sm
+                 transition-all duration-200 hover:bg-bg-card-hover"
+          [class.opacity-50]="t.completed"
+          [class.line-through]="t.completed">
+        <span class="text-text-faint">#{{ t.id }}</span> — {{ t.title }}
+        <span class="text-xs text-text-muted">(usuario {{ t.userId }})</span>
       </li>
     }
   </ul>
 }
 
-<section class="nota">
-  <h2>Qué pasó detrás</h2>
-  <ol>
-    <li><code>provideHttpClient(withInterceptors)</code> en <code>app.config.ts</code></li>
-    <li>El <strong>interceptor</strong> agrega header y loguea cada request (mira F12 → consola)</li>
-    <li><code>httpResource</code> relanza la request cuando cambia <code>limite()</code></li>
+<!-- Nota técnica -->
+<details class="mt-8 rounded-xl border border-border bg-bg-card">
+  <summary class="px-5 py-3 cursor-pointer text-sm text-text-muted hover:text-text">🔧 Detrás de cámaras</summary>
+  <ol class="px-5 pb-5 text-sm text-text-muted space-y-1 list-decimal list-inside">
+    <li><code>provideHttpClient(withInterceptors)</code> en app.config.ts</li>
+    <li>El interceptor agrega header + loguea requests (F12 → consola)</li>
+    <li><code>httpResource</code> relanza la request al cambiar <code>limite()</code></li>
     <li>El template reacciona solo: loading → datos (sin subscribe manual)</li>
   </ol>
-</section>
+</details>
