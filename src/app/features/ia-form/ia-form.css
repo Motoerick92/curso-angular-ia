@@ -1,0 +1,70 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 480px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+input, textarea, select {
+  padding: 0.45rem;
+  border-radius: 4px;
+  border: 1px solid #45475a;
+  background: #181825;
+  color: #cdd6f4;
+  font-family: inherit;
+}
+
+.magic {
+  background: #b4befe;
+  color: #1e1e2e;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.magic:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.warning {
+  background: #f9e2af;
+  color: #1e1e2e;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.warning a { color: #1e1e2e; }
+
+.error-bar {
+  background: #f38ba8;
+  color: #1e1e2e;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.ok-bar {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #a6e3a1;
+  color: #1e1e2e;
+  border-radius: 6px;
+}
+
+.error { color: #f38ba8; font-size: 0.85rem; }
+
+.nota {
+  margin-top: 2rem;
+  border-top: 1px solid #45475a;
+  padding-top: 1rem;
+  font-size: 0.9rem;
+}

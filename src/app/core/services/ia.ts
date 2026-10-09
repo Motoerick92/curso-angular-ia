@@ -163,4 +163,27 @@ export class IaService {
     this.historial.set([]);
     this.error.set(null);
   }
+
+  // ── M23: llamada genérica que NO toca el historial del chat ──
+  // Útil para formularios, autocompletados, etc. Devuelve texto crudo.
+  async generarTexto(instruccion: string, contenido: string): Promise<string> {
+    const respuesta = await fetch(`${this.baseUrl()}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.apiKey()}`,
+      },
+      body: JSON.stringify({
+        model: this.modelo(),
+        messages: [
+          { role: 'system', content: instruccion },
+          { role: 'user', content: contenido },
+        ],
+        stream: false,
+      }),
+    });
+    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    const datos = await respuesta.json();
+    return datos.choices?.[0]?.message?.content ?? '';
+  }
 }

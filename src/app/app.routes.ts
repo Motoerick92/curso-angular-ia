@@ -17,6 +17,7 @@ import { StoreDemo } from './features/store-demo/store-demo';
 import { Optimizacion } from './features/optimizacion/optimizacion';
 import { DirectivasCustom } from './features/directivas-custom/directivas-custom';
 import { Ia } from './features/ia/ia';
+import { IaForm } from './features/ia-form/ia-form';
 
 export const routes: Routes = [
   { path: '', component: Inicio },
@@ -36,6 +37,7 @@ export const routes: Routes = [
   { path: 'optimizacion', component: Optimizacion },   // Módulo 17: OnPush
   { path: 'directivas-custom', component: DirectivasCustom }, // Módulo 18: estructurales
   { path: 'ia', component: Ia },                               // Módulo 21: chat IA
+  { path: 'ia-form', component: IaForm },                      // Módulo 23: IA en forms
 
   // RUTA CON PARÁMETRO: :id llega como input (via withComponentInputBinding)
   // LAZY LOADING: loadComponent descarga el chunk SOLO al visitar la ruta

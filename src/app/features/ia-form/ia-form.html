@@ -1,0 +1,68 @@
+<h1>Módulo 23 — IA en formularios</h1>
+<p>
+  Escribe el título de una tarea y la IA sugiere descripción + prioridad.
+  La respuesta JSON se parsea y rellena el formulario con <code>patchValue</code>.
+</p>
+
+@let tieneKey = !!ia.apiKey();
+@if (!tieneKey) {
+  <div class="warning">
+    ⚠ Configura tu API key primero en <a routerLink="/ia">la página de IA</a>.
+  </div>
+}
+
+<form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+
+  <label>
+    Título de la tarea:
+    <input formControlName="titulo"
+           placeholder="ej: Optimizar consultas SQL lentas" />
+  </label>
+  @if (form.get('titulo')?.touched && form.get('titulo')?.hasError('required')) {
+    <small class="error">El título es obligatorio (la IA parte de aquí).</small>
+  }
+
+  <!-- Botón mágico: llama al servicio con solo el título -->
+  <button type="button"
+          class="magic"
+          [disabled]="generando() || !tieneKey || !form.value.titulo"
+          (click)="generarConIa()">
+    {{ generando() ? '🪄 Generando…' : '🪄 Generar detalles con IA' }}
+  </button>
+
+  @if (errorIa(); as err) {
+    <div class="error-bar">❌ {{ err }}</div>
+  }
+
+  <label>
+    Descripción (rellenable por IA, editable por ti):
+    <textarea formControlName="descripcion" rows="3"></textarea>
+  </label>
+
+  <label>
+    Prioridad sugerida:
+    <select formControlName="prioridad">
+      <option value="alta">Alta</option>
+      <option value="media">Media</option>
+      <option value="baja">Baja</option>
+    </select>
+  </label>
+
+  <button type="submit" [disabled]="form.invalid">
+    ✓ Guardar en el Store de tareas
+  </button>
+
+  @if (guardadoOk()) {
+    <div class="ok-bar">✅ Tarea guardada — mírala en el Store.</div>
+  }
+</form>
+
+<section class="nota">
+  <h2>El truco del parseo</h2>
+  <ol>
+    <li>Prompt system: "responde SOLO JSON, sin markdown".</li>
+    <li>Por si ignora la instrucción: regex <code>/\&#123;[\s\S]*\&#125;/</code> extrae el objeto.</li>
+    <li>Se valida la prioridad antes de aplicarla (valores cerrados).</li>
+    <li><code>patchValue</code> rellena sin borrar lo que el usuario escribió.</li>
+  </ol>
+</section>
