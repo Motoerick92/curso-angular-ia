@@ -1,5 +1,7 @@
 # Curso Angular 22 + IA — Índice de módulos
 
+**🎬 [Guion completo de videos](guion-curso.md)** — texto para narrar cada módulo
+
 Documentación por módulo, en orden. Cada doc tiene: teoría, comandos,
 código clave, errores comunes y ejercicios.
 
