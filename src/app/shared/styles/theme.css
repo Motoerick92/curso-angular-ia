@@ -1,0 +1,111 @@
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM — Curso Angular 22 + IA
+   ─────────────────────────────────────────────────────────────
+   Paleta pensada para CURSO profesional (no admin aburrido):
+   ・Indigo 600  → color primario (botones, links, activos)
+   ・Fuchsia    → acento (gradientes, highlights)
+   ・Slate 900  → fondo oscuro de la app
+   Nada de blanco/negro puros: todo tonos suaves de la paleta.
+
+   Todo el tema vive en CSS variables para:
+   ・Que cualquier componente pueda usarlos sin hardcodear hex
+   ・Que Tailwind las exponga vía @theme (colores bg-primary etc)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Tokens raíz (variables CSS) ─────────────────────────────── */
+:root {
+  /* Colores brand */
+  --primary:        #4f46e5;   /* indigo-600 */
+  --primary-soft:   #6366f1;   /* indigo-500 */
+  --accent:         #d946ef;   /* fuchsia-500 */
+  --accent-soft:    #e879f9;   /* fuchsia-400 */
+
+  /* Fondos (nunca blanco puro) */
+  --bg-app:         #0f172a;   /* slate-900 */
+  --bg-panel:       #1e293b;   /* slate-800 */
+  --bg-card:        #1e293b;   /* slate-800 (cards) */
+  --bg-card-hover:  #273349;
+
+  /* Texto (nunca negro puro) */
+  --text:           #e2e8f0;   /* slate-200 */
+  --text-muted:     #94a3b8;   /* slate-400 */
+  --text-faint:     #64748b;   /* slate-500 */
+
+  /* Bordes y radios */
+  --border:         #334155;   /* slate-700 */
+  --radius:         1rem;      /* bordes redondeados "premium" */
+  --radius-sm:      0.5rem;
+
+  /* Sombras suaves, tono indigo */
+  --shadow:         0 8px 24px -8px rgb(79 70 229 / 0.25);
+  --shadow-hover:   0 16px 40px -12px rgb(217 70 239 / 0.30);
+
+  /* Gradientes de marca */
+  --gradient-brand: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  --gradient-app:   radial-gradient(1200px 800px at 20% -10%, #1e1b4b 0%, transparent 60%),
+                    radial-gradient(900px 600px at 90% 110%, #3b0764 0%, transparent 55%),
+                    var(--bg-app);
+
+  /* Tipografía */
+  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Mapeo a Tailwind v4 (@theme expone las vars como clases) ── */
+@theme inline {
+  --color-primary:      var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent:       var(--accent);
+  --color-accent-soft:  var(--accent-soft);
+  --color-bg-app:       var(--bg-app);
+  --color-bg-panel:     var(--bg-panel);
+  --color-bg-card:      var(--bg-card);
+  --color-bg-card-hover: var(--bg-card-hover);
+  --color-text:         var(--text);
+  --color-text-muted:   var(--text-muted);
+  --color-text-faint:   var(--text-faint);
+  --color-border:       var(--border);
+  --font-sans:          var(--font-sans);
+  --radius-xl:          var(--radius);
+  --radius-md:          var(--radius-sm);
+}
+
+/* ── Base global ─────────────────────────────────────────────── */
+html {
+  color-scheme: dark;             /* inputs nativos oscuros */
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--text);
+  /* Fondo con gradientes radiales = "premium", nunca plano blanco */
+  background: var(--gradient-app);
+  background-attachment: fixed;
+}
+
+/* Scrollbar discreta acorde al tema */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-app); }
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+/* Selección de texto con acento */
+::selection {
+  background: rgb(217 70 239 / 0.35);
+  color: #fff;
+}
+
+/* Links heredan tipografía/tema */
+a { color: var(--primary-soft); }
+a:hover { color: var(--accent-soft); }
+
+/* Focus visible accesible con acento de marca */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}

@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+/* ═══════════════════════════════════════════════════════════
+   STYLES GLOBALES — Curso Angular 22 + IA
+   Orden obligatorio: TODOS los @import van primero (regla CSS).
+   ═══════════════════════════════════════════════════════════ */
+
+/* 1. Tipografía Google Fonts: Outfit (display) + Inter (texto) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+
+/* 2. Tailwind v4 (motor de utilidades) */
+@import "tailwindcss";
+
+/* 3. Nuestro design system: paleta Indigo/Fuchsia/Slate, tokens, base */
+@import "./app/shared/styles/theme.css";
